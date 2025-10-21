@@ -110,7 +110,7 @@ const Blog = () => {
                 <span>Voltar ao Dashboard</span>
               </Link>
               <Link to="/" className="text-2xl font-bold hover:text-blue-200 transition-colors">
-                DireitAI News
+                Esquerdai News
               </Link>
             </div>
             <nav className="hidden md:flex items-center gap-6">

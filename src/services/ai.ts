@@ -154,7 +154,7 @@ export class AIService {
   ): Promise<void> {
     try {
       const response = await this.retryWithBackoff(async () => {
-        const apiUrl = import.meta.env.VITE_API_URL || 'https://direitai-backend.vercel.app/api';
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
         const res = await fetch(`${apiUrl}/ai/chat/stream`, {
           method: 'POST',
           headers: {

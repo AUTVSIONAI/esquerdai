@@ -77,20 +77,20 @@ const SurveyResults = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center">
-        <div className="text-primary-900 text-xl">Carregando resultados...</div>
+      <div className="min-h-screen bg-gradient-to-br from-progressive-50 to-progressive-100 flex items-center justify-center">
+        <div className="text-progressive-900 text-xl">Carregando resultados...</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">
+    <div className="min-h-screen bg-gradient-to-br from-progressive-50 to-progressive-100">
       {/* Header */}
       <div className="bg-white/90 backdrop-blur-sm border-b border-gray-200 shadow-soft">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <TrendingUp className="h-8 w-8 text-primary-600" />
+              <TrendingUp className="h-8 w-8 text-progressive-600" />
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">Resultados das Pesquisas</h1>
                 <p className="text-gray-600">Análise completa dos resultados e tendências</p>
@@ -116,7 +116,7 @@ const SurveyResults = () => {
                 onClick={() => setSelectedPeriod('week')}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                   selectedPeriod === 'week'
-                    ? 'bg-primary-600 text-white'
+                    ? 'bg-progressive-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -126,7 +126,7 @@ const SurveyResults = () => {
                 onClick={() => setSelectedPeriod('month')}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                   selectedPeriod === 'month'
-                    ? 'bg-primary-600 text-white'
+                    ? 'bg-progressive-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -136,7 +136,7 @@ const SurveyResults = () => {
                 onClick={() => setSelectedPeriod('all')}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                   selectedPeriod === 'all'
-                    ? 'bg-primary-600 text-white'
+                    ? 'bg-progressive-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -150,7 +150,7 @@ const SurveyResults = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-xl p-6 shadow-soft border border-gray-200">
             <div className="flex items-center space-x-3">
-              <BarChart3 className="h-8 w-8 text-primary-600" />
+              <BarChart3 className="h-8 w-8 text-progressive-600" />
               <div>
                 <p className="text-gray-600 text-sm">Total de Pesquisas</p>
                 <p className="text-2xl font-bold text-gray-900">{stats.totalSurveys || 0}</p>

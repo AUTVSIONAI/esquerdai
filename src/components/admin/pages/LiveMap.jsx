@@ -276,7 +276,7 @@ const LiveMap = () => {
                   onClick={() => setSelectedView('users')}
                   className={`px-3 py-2 rounded-lg text-sm font-medium ${
                     selectedView === 'users'
-                      ? 'bg-primary-100 text-primary-700'
+                      ? 'bg-progressive-100 text-progressive-700'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
@@ -287,7 +287,7 @@ const LiveMap = () => {
                   onClick={() => setSelectedView('events')}
                   className={`px-3 py-2 rounded-lg text-sm font-medium ${
                     selectedView === 'events'
-                      ? 'bg-primary-100 text-primary-700'
+                      ? 'bg-progressive-100 text-progressive-700'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
@@ -298,7 +298,7 @@ const LiveMap = () => {
                   onClick={() => setSelectedView('heatmap')}
                   className={`px-3 py-2 rounded-lg text-sm font-medium ${
                     selectedView === 'heatmap'
-                      ? 'bg-primary-100 text-primary-700'
+                      ? 'bg-progressive-100 text-progressive-700'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
@@ -335,7 +335,7 @@ const LiveMap = () => {
                     <select
                       value={selectedCity}
                       onChange={(e) => setSelectedCity(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                     >
                       <option value="all">Todas as Cidades</option>
                       {cityStats.map(city => (
@@ -347,7 +347,7 @@ const LiveMap = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500">
                       <option value="all">Todos os Status</option>
                       <option value="online">Online</option>
                       <option value="in_event">Em Evento</option>
@@ -356,7 +356,7 @@ const LiveMap = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Plano</label>
-                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500">
                       <option value="all">Todos os Planos</option>
                       <option value="gratuito">Gratuito</option>
                       <option value="engajado">Engajado</option>

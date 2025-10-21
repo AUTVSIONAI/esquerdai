@@ -78,9 +78,9 @@ const DireitaGPT = () => {
         setMessages([{
           id: 'welcome',
           type: 'bot',
-          content: 'Olá! Sou a Patriota IA, sua IA conservadora. Como posso ajudá-lo hoje? Posso discutir política, economia, valores tradicionais e muito mais!',
+          content: 'Olá! Sou a EsquerdaIA, sua IA progressista. Como posso ajudá-lo hoje? Posso discutir política, economia, direitos sociais, sustentabilidade e muito mais!',
           timestamp: new Date(),
-          model: 'Patriota IA'
+          model: 'EsquerdaIA'
         }])
       } else {
         // Converter histórico para formato de mensagens
@@ -98,7 +98,7 @@ const DireitaGPT = () => {
             type: 'bot',
             content: conv.aiResponse,
             timestamp: new Date(conv.createdAt),
-            model: conv.model || 'Patriota IA'
+            model: conv.model || 'EsquerdaIA'
           })
         })
         setMessages(formattedMessages)
@@ -196,10 +196,10 @@ const DireitaGPT = () => {
           type: 'bot',
           content: responseContent,
           timestamp: new Date(),
-          model: 'Patriota IA (Local)'
+          model: 'EsquerdaIA (Local)'
         }
         
-        setCurrentModel('Patriota IA (Local)')
+        setCurrentModel('EsquerdaIA (Local)')
         setIsConnected(false)
         setLastBotMessage(responseContent)
         
@@ -218,7 +218,7 @@ const DireitaGPT = () => {
         type: 'bot',
         content: 'Desculpe, houve um erro ao processar sua mensagem. Tente novamente.',
         timestamp: new Date(),
-        model: 'Patriota IA'
+        model: 'EsquerdaIA'
       }
       setMessages(prev => [...prev, errorMessage])
     } finally {
@@ -279,7 +279,7 @@ const DireitaGPT = () => {
             <Bot className="h-6 w-6 text-blue-600" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Patriota IA</h2>
+            <h2 className="text-lg font-semibold text-gray-900">EsquerdaIA</h2>
             <div className="flex items-center space-x-2">
               {isConnected ? (
                 <Wifi className="h-4 w-4 text-green-500" />
@@ -287,7 +287,7 @@ const DireitaGPT = () => {
                 <WifiOff className="h-4 w-4 text-red-500" />
               )}
               <span className="text-sm text-gray-500">
-                {currentModel || 'Patriota IA'} • {isConnected ? 'Online' : 'Offline'}
+                {currentModel || 'EsquerdaIA'} • {isConnected ? 'Online' : 'Offline'}
               </span>
             </div>
           </div>

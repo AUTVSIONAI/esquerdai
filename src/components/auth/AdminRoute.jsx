@@ -13,7 +13,7 @@ const AdminRoute = ({ children }) => {
     const checkAdminStatus = async () => {
       if (user) {
         // Verificação simples por email para demo - admin não precisa confirmar email
-        if (user.email === 'admin@direitai.com') {
+        if (user.email === (import.meta.env.VITE_ADMIN_EMAIL || 'admin@esquerdai.com')) {
           setIsAdminUser(true)
         } else {
           // Para outros usuários, verificar se email está confirmado e se é admin

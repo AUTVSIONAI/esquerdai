@@ -12,6 +12,7 @@ import {
   ArrowDown,
   Eye
 } from 'lucide-react'
+import { BRAND } from '../../../utils/brand'
 
 const Overview = () => {
   const [stats, setStats] = useState({
@@ -159,7 +160,7 @@ const Overview = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Dashboard Administrativo</h2>
-          <p className="text-gray-600">Visão geral da plataforma Direitai.com</p>
+          <p className="text-gray-600">Visão geral da plataforma {BRAND.domain}</p>
         </div>
         <div className="flex items-center space-x-2">
           <button 
@@ -210,7 +211,7 @@ const Overview = () => {
         <div className="card">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">Eventos Recentes</h3>
-            <button className="text-primary-600 hover:text-primary-700 text-sm font-medium">
+            <button className="text-progressive-600 hover:text-progressive-700 text-sm font-medium">
               Ver todos
             </button>
           </div>
@@ -241,7 +242,7 @@ const Overview = () => {
         <div className="card">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">Cidades com Mais Usuários</h3>
-            <button className="text-primary-600 hover:text-primary-700 text-sm font-medium">
+            <button className="text-progressive-600 hover:text-progressive-700 text-sm font-medium">
               Ver ranking
             </button>
           </div>
@@ -249,7 +250,7 @@ const Overview = () => {
             {topCities.map((city, index) => (
               <div key={`${city.city}-${city.state}`} className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center text-sm font-bold">
+                  <div className="w-8 h-8 bg-progressive-100 text-progressive-600 rounded-full flex items-center justify-center text-sm font-bold">
                     {index + 1}
                   </div>
                   <div>
@@ -272,7 +273,7 @@ const Overview = () => {
         <div className="lg:col-span-2 card">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">Atividades Recentes</h3>
-            <button className="text-primary-600 hover:text-primary-700 text-sm font-medium flex items-center">
+            <button className="text-progressive-600 hover:text-progressive-700 text-sm font-medium flex items-center">
               <Eye className="h-4 w-4 mr-1" />
               Ver todas
             </button>

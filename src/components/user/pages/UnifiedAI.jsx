@@ -303,7 +303,7 @@ const UnifiedAI = () => {
       {/* Header com seletor de modo */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">DireitaIA Unificada</h2>
+          <h2 className="text-2xl font-bold text-gray-900">EsquerdaIA Unificada</h2>
           <p className="text-gray-600">Chat inteligente e criação de conteúdo em uma única interface</p>
         </div>
         
@@ -343,7 +343,7 @@ const UnifiedAI = () => {
                 <Bot className="h-5 w-5 text-blue-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900">DireitaIA Chat</h3>
+                <h3 className="font-semibold text-gray-900">EsquerdaIA Chat</h3>
                 <div className="flex items-center space-x-2">
                   {isConnected ? (
                     <><Wifi className="h-3 w-3 text-green-500" /><span className="text-xs text-green-600">Online</span></>
@@ -367,7 +367,7 @@ const UnifiedAI = () => {
             {messages.length === 0 ? (
               <div className="text-center text-gray-500 mt-8">
                 <Bot className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                <p>Olá! Sou o DireitaIA. Como posso ajudá-lo hoje?</p>
+                <p>Olá! Sou a EsquerdaIA. Como posso ajudá-lo hoje?</p>
               </div>
             ) : (
               messages.map((message) => (
@@ -405,7 +405,7 @@ const UnifiedAI = () => {
                 <div className="bg-gray-100 text-gray-900 max-w-xs lg:max-w-md px-4 py-2 rounded-lg">
                   <div className="flex items-center space-x-2">
                     <Bot className="h-3 w-3" />
-                    <span className="text-xs opacity-75">DireitaIA está digitando...</span>
+                    <span className="text-xs opacity-75">EsquerdaIA está digitando...</span>
                   </div>
                   <div className="flex space-x-1 mt-2">
                     <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>

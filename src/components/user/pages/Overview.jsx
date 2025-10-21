@@ -195,7 +195,7 @@ const Overview = () => {
   return (
     <div className="space-y-6">
       {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-primary-600 to-conservative-600 rounded-lg p-6 text-white">
+      <div className="bg-gradient-to-r from-primary-600 to-progressive-600 rounded-lg p-6 text-white">
         <h2 className="text-2xl font-bold mb-2">
           Bem-vindo, {userProfile?.username || 'Patriota'}!
         </h2>
@@ -412,7 +412,7 @@ const Overview = () => {
           <div className="flex items-center space-x-3">
             <MessageCircle className="h-8 w-8 text-blue-600" />
             <div>
-              <h4 className="font-medium text-gray-900">DireitaIA</h4>
+              <h4 className="font-medium text-gray-900">EsquerdaIA</h4>
               <p className="text-sm text-gray-500">Conversar com a IA</p>
             </div>
           </div>

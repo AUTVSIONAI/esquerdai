@@ -211,7 +211,7 @@ const CreativeAI = () => {
   const shareContent = (content) => {
     if (navigator.share) {
       navigator.share({
-        title: 'Conteúdo Direitai.com',
+        title: 'Conteúdo esquerdai.com',
         text: content
       })
     } else {

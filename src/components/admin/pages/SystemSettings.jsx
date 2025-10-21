@@ -10,7 +10,7 @@ import {
 
 const SystemSettings = () => {
   const [settings, setSettings] = useState({
-    siteName: 'DireitAI',
+    siteName: 'Esquerdai',
     siteDescription: 'Plataforma de Educação Jurídica com IA',
     maintenanceMode: false,
     registrationEnabled: true,

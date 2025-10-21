@@ -180,7 +180,7 @@ const BlogPost = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-8">
               <Link to="/" className="text-2xl font-bold text-blue-600">
-                DireitAI
+                Esquerdai
               </Link>
               <nav className="hidden md:flex items-center gap-6">
                 <Link to="/blog" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
@@ -279,7 +279,7 @@ const BlogPost = () => {
                     )}
                     <div>
                       <div className="font-medium text-gray-900">
-                        Por {post.politicians?.name || 'Redação DireitAI'}
+                        Por {post.politicians?.name || 'Redação Esquerdai'}
                       </div>
                       <div className="text-xs text-gray-500">
                         {post.politicians?.position || 'Jornalista'}

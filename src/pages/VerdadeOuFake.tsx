@@ -475,17 +475,17 @@ const VerdadeOuFake = () => {
     const resultText = result.resultado === 'verdade' ? 'VERDADE' : 
                       result.resultado === 'fake' ? 'FAKE NEWS' : 'TENDENCIOSO';
     
-    const shareText = `🔍 Análise DireitAI - ${resultText}\n\n` +
+    const shareText = `🔍 Análise Esquerdai - ${resultText}\n\n` +
                      `Confiança: ${result.confianca}%\n\n` +
                      `${result.explicacao}\n\n` +
                      `Verificado em: ${new Date(result.created_at).toLocaleDateString('pt-BR')}\n\n` +
-                     `#DireitAI #FakeNews #FactCheck`;
+                     `#Esquerdai #FakeNews #FactCheck`;
 
     try {
       if (navigator.share) {
         // API Web Share (mobile)
         await navigator.share({
-          title: `Análise DireitAI - ${resultText}`,
+          title: `Análise Esquerdai - ${resultText}`,
           text: shareText,
           url: window.location.href
         });

@@ -100,7 +100,7 @@ const PaymentSuccess = () => {
             Pagamento Realizado com Sucesso!
           </h1>
           <p className="text-xl text-gray-600">
-            Bem-vindo à comunidade DireitAI Premium
+            Bem-vindo à comunidade Esquerdai Premium
           </p>
         </div>
         
@@ -246,10 +246,10 @@ const PaymentSuccess = () => {
             Precisa de ajuda? Nossa equipe está aqui para você.
           </p>
           <a
-            href="mailto:suporte@direitai.com"
+            href="mailto:suporte@esquerdai.com"
             className="text-blue-600 hover:text-blue-700 font-medium"
           >
-            suporte@direitai.com
+            suporte@esquerdai.com
           </a>
         </div>
       </div>

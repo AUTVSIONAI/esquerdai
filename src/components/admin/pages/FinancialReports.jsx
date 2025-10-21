@@ -114,7 +114,7 @@ const FinancialReports = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-progressive-600"></div>
       </div>
     )
   }
@@ -145,7 +145,7 @@ const FinancialReports = () => {
           <select
             value={selectedPeriod}
             onChange={(e) => setSelectedPeriod(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
           >
             <option value="week">Última Semana</option>
             <option value="month">Último Mês</option>
@@ -243,7 +243,7 @@ const FinancialReports = () => {
             <select
               value={selectedMetric}
               onChange={(e) => setSelectedMetric(e.target.value)}
-              className="px-3 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="px-3 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
             >
               <option value="revenue">Receita</option>
               <option value="subscriptions">Assinantes</option>
@@ -379,7 +379,7 @@ const FinancialReports = () => {
       <div className="card">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900">Transações Recentes</h3>
-          <button className="text-primary-600 hover:text-primary-700 text-sm font-medium flex items-center">
+          <button className="text-progressive-600 hover:text-progressive-700 text-sm font-medium flex items-center">
             Ver todas
             <ArrowUpRight className="h-4 w-4 ml-1" />
           </button>

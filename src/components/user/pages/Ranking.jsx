@@ -365,10 +365,10 @@ const Ranking = () => {
       </div>
 
       {/* Motivation */}
-      <div className="bg-gradient-to-r from-primary-600 to-conservative-600 rounded-lg p-6 text-white">
+      <div className="bg-gradient-to-r from-primary-600 to-progressive-600 rounded-lg p-6 text-white">
         <h3 className="text-xl font-bold mb-2">Continue Subindo no Ranking!</h3>
         <p className="text-primary-100 mb-4">
-          Participe de mais eventos, converse com o DireitaIA e engaje-se com a comunidade para ganhar pontos e subir no ranking.
+          Participe de mais eventos, converse com a EsquerdaIA e engaje-se com a comunidade para ganhar pontos e subir no ranking.
         </p>
         <div className="flex space-x-4">
           <button 
@@ -385,6 +385,7 @@ const Ranking = () => {
           </button>
         </div>
       </div>
+
     </div>
   )
 }

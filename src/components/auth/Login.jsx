@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signIn, signUp } from '../../lib/supabase'
 import { Flag, Shield, Users, ArrowLeft } from 'lucide-react'
+import { BRAND } from '../../utils/brand'
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true)
@@ -23,7 +24,7 @@ const Login = () => {
         if (error) throw error
         
         // Verificar se é admin para redirecionar
-        if (data.user?.email === 'admin@direitai.com') {
+        if (data.user?.email === BRAND.adminEmail) {
           navigate('/admin')
         } else {
           navigate('/dashboard')
@@ -61,12 +62,12 @@ const Login = () => {
             </button>
             <div className="flex items-center space-x-2">
               <Flag className="h-8 w-8 text-primary-600" />
-              <h1 className="text-3xl font-bold text-gray-900">Direitai.com</h1>
+              <h1 className="text-3xl font-bold text-gray-900">{BRAND.domain}</h1>
             </div>
             <div className="w-24"></div> {/* Spacer for centering */}
           </div>
           <h2 className="text-xl text-gray-600">
-            {isLogin ? 'Entre na Central do Patriota' : 'Junte-se ao Movimento'}
+            {isLogin ? 'Entre na Central da Esquerda' : 'Junte-se ao Movimento Progressista'}
           </h2>
         </div>
 

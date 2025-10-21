@@ -49,7 +49,7 @@ const Header = ({ setSidebarOpen }) => {
           
           <div className="ml-4 lg:ml-0">
             <h1 className="text-2xl font-semibold text-gray-900">
-              Central do Patriota
+              Central da Esquerda
             </h1>
             <p className="text-sm text-gray-500">
               Bem-vindo de volta, {userProfile?.username || userProfile?.email}
@@ -70,8 +70,8 @@ const Header = ({ setSidebarOpen }) => {
           
           {/* Points */}
           {userPoints?.total !== undefined && (
-            <div className="flex items-center space-x-1 bg-primary-50 px-3 py-1 rounded-full">
-              <span className="text-sm font-medium text-primary-700">
+            <div className="flex items-center space-x-1 bg-progressive-50 px-3 py-1 rounded-full">
+              <span className="text-sm font-medium text-progressive-700">
                 {userPoints.total} pts
               </span>
             </div>
@@ -88,7 +88,7 @@ const Header = ({ setSidebarOpen }) => {
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="flex items-center space-x-2 p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-full"
             >
-              <div className="h-8 w-8 bg-primary-600 rounded-full flex items-center justify-center">
+              <div className="h-8 w-8 bg-progressive-600 rounded-full flex items-center justify-center">
                 <User className="h-4 w-4 text-white" />
               </div>
             </button>

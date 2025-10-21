@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Flag, Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import { BRAND } from '../../utils/brand'
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -102,18 +103,18 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-conservative-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-progressive-50 to-progressive-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <div className="flex justify-center items-center space-x-2 mb-4">
-            <Flag className="h-8 w-8 text-primary-600" />
-            <h1 className="text-3xl font-bold text-gray-900">Direitai.com</h1>
+            <Flag className="h-8 w-8 text-progressive-600" />
+            <h1 className="text-3xl font-bold text-gray-900">{BRAND.domain}</h1>
           </div>
-          <h2 className="text-xl text-gray-600">
-            Junte-se ao Movimento Patriota
++          <h2 className="text-xl text-gray-600">
+            Junte-se ao Movimento Progressista
           </h2>
           <p className="mt-2 text-sm text-gray-500">
-            Crie sua conta e faça parte da maior comunidade conservadora do Brasil
+            Crie sua conta e faça parte da maior comunidade progressista do Brasil
           </p>
         </div>
 
@@ -135,7 +136,7 @@ const RegisterPage = () => {
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-progressive-500 ${
                     errors.firstName ? 'border-red-300' : 'border-gray-300'
                   }`}
                   placeholder="Seu nome"
@@ -154,7 +155,7 @@ const RegisterPage = () => {
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-progressive-500 ${
                     errors.lastName ? 'border-red-300' : 'border-gray-300'
                   }`}
                   placeholder="Seu sobrenome"
@@ -174,7 +175,7 @@ const RegisterPage = () => {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-progressive-500 ${
                   errors.username ? 'border-red-300' : 'border-gray-300'
                 }`}
                 placeholder="Escolha um nome de usuário"
@@ -193,7 +194,7 @@ const RegisterPage = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-progressive-500 ${
                   errors.email ? 'border-red-300' : 'border-gray-300'
                 }`}
                 placeholder="seu@email.com"
@@ -213,7 +214,7 @@ const RegisterPage = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 pr-10 ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-progressive-500 pr-10 ${
                     errors.password ? 'border-red-300' : 'border-gray-300'
                   }`}
                   placeholder="Mínimo 6 caracteres"
@@ -245,7 +246,7 @@ const RegisterPage = () => {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 pr-10 ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-progressive-500 pr-10 ${
                     errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
                   }`}
                   placeholder="Confirme sua senha"
@@ -274,17 +275,17 @@ const RegisterPage = () => {
                   name="acceptTerms"
                   checked={formData.acceptTerms}
                   onChange={handleChange}
-                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-progressive-600 focus:ring-progressive-500 border-gray-300 rounded"
                 />
               </div>
               <div className="ml-3 text-sm">
                 <label className="text-gray-700">
                   Eu aceito os{' '}
-                  <Link to="/terms" className="text-primary-600 hover:text-primary-700">
+                  <Link to="/terms" className="text-progressive-600 hover:text-progressive-700">
                     Termos de Uso
                   </Link>{' '}
                   e a{' '}
-                  <Link to="/privacy" className="text-primary-600 hover:text-primary-700">
+                  <Link to="/privacy" className="text-progressive-600 hover:text-progressive-700">
                     Política de Privacidade
                   </Link>
                 </label>
@@ -297,7 +298,7 @@ const RegisterPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary-600 hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2"
+              className="w-full bg-progressive-600 hover:bg-progressive-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2"
             >
               {loading ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
@@ -315,7 +316,7 @@ const RegisterPage = () => {
               Já tem uma conta?{' '}
               <Link 
                 to="/login" 
-                className="text-primary-600 hover:text-primary-700 font-medium"
+                className="text-progressive-600 hover:text-progressive-700 font-medium"
               >
                 Faça login
               </Link>

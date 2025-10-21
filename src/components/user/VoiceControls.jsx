@@ -253,7 +253,7 @@ const VoiceControls = forwardRef(({
 
               {/* Teste */}
               <button
-                onClick={() => speak('Olá, patriota! Esta é a voz da DireitaIA.', {
+                onClick={() => speak('Olá! Esta é a voz da EsquerdaIA.', {
                   voice: selectedVoice,
                   rate: speechRate,
                   volume: speechVolume

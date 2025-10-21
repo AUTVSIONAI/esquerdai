@@ -198,19 +198,19 @@ const SurveyDetail = () => {
   const userVoted = survey.user_voted
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">
+    <div className="min-h-screen bg-gradient-to-br from-progressive-50 to-progressive-100">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 shadow-soft">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center space-x-4">
             <button
               onClick={() => navigate('/pesquisas')}
-              className="p-2 rounded-lg bg-primary-100 hover:bg-primary-200 transition-colors"
+              className="p-2 rounded-lg bg-progressive-100 hover:bg-progressive-200 transition-colors"
             >
-              <ArrowLeft className="h-5 w-5 text-primary-700" />
+              <ArrowLeft className="h-5 w-5 text-progressive-700" />
             </button>
             <div className="flex items-center space-x-3">
-              <BarChart3 className="h-8 w-8 text-primary-600" />
+              <BarChart3 className="h-8 w-8 text-progressive-600" />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Detalhes da Pesquisa</h1>
                 <p className="text-gray-600">Participe e veja os resultados em tempo real</p>
@@ -272,9 +272,10 @@ const SurveyDetail = () => {
                         ? 'cursor-not-allowed bg-gray-50 border-gray-200'
                         : userVoted
                         ? 'cursor-pointer bg-gray-50 border-gray-300 hover:bg-gray-100'
-                        : 'hover:bg-primary-50 bg-white border-primary-200 hover:border-primary-300'
+                        : 'hover:bg-progressive-50 bg-white border-progressive-200 hover:border-progressive-300'
                     } ${
-                      isSelected ? 'ring-2 ring-primary-500 bg-primary-50' : ''
+-                      isSelected ? 'ring-2 ring-primary-500 bg-primary-50' : ''
++                      isSelected ? 'ring-2 ring-progressive-500 bg-progressive-50' : ''
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -283,13 +284,13 @@ const SurveyDetail = () => {
                         {(expired || userVoted) && (
                           <span className="text-gray-600">{votes} votos ({percentage}%)</span>
                         )}
-                        {isSelected && <Vote className="h-5 w-5 text-primary-600" />}
+                        {isSelected && <Vote className="h-5 w-5 text-progressive-600" />}
                       </div>
                     </div>
                     {(expired || userVoted) && (
                       <div className="mt-3 bg-gray-200 rounded-full h-3">
                         <div
-                          className="bg-primary-600 h-3 rounded-full transition-all duration-500"
+                          className="bg-progressive-600 h-3 rounded-full transition-all duration-500"
                           style={{ width: `${percentage}%` }}
                         />
                       </div>
@@ -321,7 +322,7 @@ const SurveyDetail = () => {
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Compartilhe sua opinião sobre esta pesquisa..."
-                    className="w-full px-4 py-3 rounded-lg bg-white text-gray-900 placeholder-gray-500 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
+                    className="w-full px-4 py-3 rounded-lg bg-white text-gray-900 placeholder-gray-500 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-progressive-500 resize-none"
                     rows={3}
                     maxLength={500}
                   />
@@ -352,7 +353,7 @@ const SurveyDetail = () => {
               Array.isArray(comments) ? comments.map((comment) => (
                 <div key={comment.id} className="bg-gray-50 rounded-lg p-4">
                   <div className="flex items-start space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center">
+                    <div className="w-10 h-10 bg-gradient-to-br from-progressive-500 to-progressive-600 rounded-full flex items-center justify-center">
                       <span className="text-white font-bold text-sm">
                         {comment.usuario_nome?.charAt(0).toUpperCase() || 'U'}
                       </span>
@@ -367,7 +368,7 @@ const SurveyDetail = () => {
                         <button
                           onClick={() => handleLikeComment(comment.id)}
                           className={`flex items-center space-x-1 text-sm transition-colors ${
-                            comment.user_liked ? 'text-primary-600' : 'text-gray-500 hover:text-primary-600'
+                            comment.user_liked ? 'text-progressive-600' : 'text-gray-500 hover:text-progressive-600'
                           }`}
                         >
                           <ThumbsUp className="h-4 w-4" />

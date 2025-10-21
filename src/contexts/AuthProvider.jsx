@@ -2,6 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { supabase, getCurrentUser, resendConfirmation } from '../lib/supabase'
 import { AuthContext } from './AuthContext'
 
+// Define o e-mail de admin a partir de env, com fallback para Esquerdai
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || 'admin@esquerdai.com'
+
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [userProfile, setUserProfile] = useState(null)
@@ -26,8 +29,8 @@ const AuthProvider = ({ children }) => {
         username: currentUser?.user_metadata?.username || '',
         email: currentUser?.email || '',
         avatar_url: currentUser?.user_metadata?.avatar_url || null,
-        is_admin: currentUser?.email === 'admin@direitai.com',
-        email_confirmed_at: currentUser?.email === 'admin@direitai.com' ? new Date().toISOString() : currentUser?.email_confirmed_at
+        is_admin: currentUser?.email === ADMIN_EMAIL,
+        email_confirmed_at: currentUser?.email === ADMIN_EMAIL ? new Date().toISOString() : currentUser?.email_confirmed_at
       };
       setUserProfile(basicProfile);
       setLoading(false);
@@ -99,8 +102,8 @@ const AuthProvider = ({ children }) => {
         username: user?.user_metadata?.username || '',
         email: user?.email || '',
         avatar_url: user?.user_metadata?.avatar_url || null,
-        is_admin: user?.email === 'admin@direitai.com',
-        email_confirmed_at: user?.email === 'admin@direitai.com' ? new Date().toISOString() : user?.email_confirmed_at
+        is_admin: user?.email === ADMIN_EMAIL,
+        email_confirmed_at: user?.email === ADMIN_EMAIL ? new Date().toISOString() : user?.email_confirmed_at
       };
       setUserProfile(basicProfile);
     }

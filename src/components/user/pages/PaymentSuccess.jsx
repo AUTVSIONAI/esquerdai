@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { CheckCircle, Crown, Zap, ArrowRight, Home, Star } from 'lucide-react'
 import { apiClient } from '../../../lib/api'
+import { BRAND } from '../../../utils/brand'
 
 const PaymentSuccess = () => {
   const navigate = useNavigate()
@@ -57,7 +58,7 @@ const PaymentSuccess = () => {
     switch (planId) {
       case 'engajado':
         return [
-          'Acesso completo ao DireitaIA',
+          'Acesso completo à EsquerdaIA',
           'Consultas ilimitadas',
           'Suporte prioritário',
           'Recursos avançados de IA',
@@ -100,7 +101,7 @@ const PaymentSuccess = () => {
             Pagamento Realizado com Sucesso!
           </h1>
           <p className="text-xl text-gray-600">
-            Bem-vindo à comunidade DireitAI Premium
+            Bem-vindo à comunidade Esquerdai Premium
           </p>
         </div>
         
@@ -111,7 +112,7 @@ const PaymentSuccess = () => {
               <div className="flex items-center justify-between text-white">
                 <div>
                   <h2 className="text-2xl font-bold mb-2">
-                    Plano {subscription.plan === 'engajado' ? 'Patriota Engajado' : 'Patriota Premium'}
+                    Plano {subscription.plan === 'engajado' ? 'Progressista Engajado' : 'Progressista Premium'}
                   </h2>
                   <p className="text-lg opacity-90">
                     Assinatura ativa
@@ -197,7 +198,7 @@ const PaymentSuccess = () => {
                 <span className="text-xl font-bold text-purple-600">2</span>
               </div>
               <h4 className="font-semibold text-gray-900 mb-2">
-                Use o DireitaIA
+                Use o EsquerdaIA
               </h4>
               <p className="text-gray-600 text-sm">
                 Aproveite consultas ilimitadas e recursos avançados de IA
@@ -243,10 +244,10 @@ const PaymentSuccess = () => {
             Precisa de ajuda? Nossa equipe está aqui para você.
           </p>
           <a
-            href="mailto:suporte@direitai.com"
+            href={`mailto:${BRAND.supportEmail}`}
             className="text-blue-600 hover:text-blue-700 font-medium"
           >
-            suporte@direitai.com
+            {BRAND.supportEmail}
           </a>
         </div>
       </div>

@@ -23,7 +23,7 @@ const ConstitutionDownload = () => {
 
   const checkDownloadStatus = async () => {
     try {
-      const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://direitai-backend.vercel.app/api';
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
       // Usar o auth_id do Supabase para as rotas de constitution-downloads
       const userId = user?.id || userProfile?.auth_id;
       const response = await fetch(`${API_BASE_URL}/constitution-downloads/users/${userId}/status`, {
@@ -57,7 +57,7 @@ const ConstitutionDownload = () => {
     try {
       // Buscar o user_id correto da tabela users usando o auth_id
       const session = await supabase.auth.getSession();
-      const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://direitai-backend.vercel.app/api';
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
       
       // Primeiro, buscar o user_id da tabela users
       const userResponse = await fetch(`${API_BASE_URL}/users/profile`, {
@@ -98,7 +98,7 @@ const ConstitutionDownload = () => {
     try {
       // Primeiro, registrar o download no backend
       const session = await supabase.auth.getSession();
-      const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://direitai-backend.vercel.app/api';
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
       // Usar auth_id para constitution-downloads
       const authUserId = user?.id || userProfile?.auth_id;
       const response = await fetch(`${API_BASE_URL}/constitution-downloads/users/${authUserId}/register`, {

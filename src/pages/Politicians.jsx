@@ -128,7 +128,7 @@ const Politicians = () => {
               Diretório de Políticos
             </h1>
             <p className="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto">
-              Conheça os representantes da direita brasileira, suas propostas e como entrar em contato
+              Conheça os representantes da esquerda brasileira, suas propostas e como entrar em contato
             </p>
           </div>
         </div>

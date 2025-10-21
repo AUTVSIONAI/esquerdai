@@ -30,9 +30,15 @@ export const useGamification = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [isInitialized, setIsInitialized] = useState(false)
+  const [resolvedUserId, setResolvedUserId] = useState(null)
 
   // Função para obter o user_id correto da tabela public.users
   const getUserId = async () => {
+    // Cache para evitar chamadas repetidas ao Supabase
+    if (resolvedUserId) {
+      return resolvedUserId
+    }
+    
     console.log('🔍 getUserId - userProfile:', userProfile)
     if (!userProfile?.id) {
       console.log('❌ getUserId - userProfile.id não encontrado')
@@ -41,7 +47,6 @@ export const useGamification = () => {
     
     try {
       console.log('🔍 getUserId - Buscando user_id para auth_id:', userProfile.id)
-      // Buscar o user_id da tabela public.users usando o auth_id
       const { data: user, error } = await supabase
         .from('users')
         .select('id')
@@ -51,15 +56,18 @@ export const useGamification = () => {
       if (error) {
         console.error('❌ Erro ao buscar user_id:', error)
         console.log('🔄 getUserId - Usando fallback para auth_id:', userProfile.id)
-        return userProfile.id // fallback para auth_id
+        setResolvedUserId(userProfile.id)
+        return userProfile.id
       }
       
       console.log('✅ getUserId - user_id encontrado:', user.id, 'para auth_id:', userProfile.id)
+      setResolvedUserId(user.id)
       return user.id
     } catch (error) {
       console.error('❌ Erro ao resolver user_id:', error)
       console.log('🔄 getUserId - Usando fallback para auth_id:', userProfile.id)
-      return userProfile.id // fallback para auth_id
+      setResolvedUserId(userProfile.id)
+      return userProfile.id
     }
   }
 

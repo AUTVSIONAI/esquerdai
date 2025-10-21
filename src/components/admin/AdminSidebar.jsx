@@ -74,7 +74,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
       current: location.pathname === '/admin/agents'
     },
     {
-      name: 'Blog Patriota',
+      name: 'Blog Progressista',
       href: '/admin/blog',
       icon: BookOpen,
       current: location.pathname === '/admin/blog'
@@ -86,7 +86,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
       current: location.pathname === '/admin/ratings'
     },
     {
-      name: 'Pesquisas DireitaJá',
+      name: 'Pesquisas EsquerdaJá',
       href: '/admin/surveys',
       icon: BarChart3,
       current: location.pathname === '/admin/surveys'
@@ -167,7 +167,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
       `}>
         <div className="flex items-center justify-between h-16 px-4 bg-gray-900 flex-shrink-0">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-progressive-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">D</span>
             </div>
             <span className="text-white font-bold text-lg">Admin Panel</span>
@@ -195,7 +195,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     className={`
                       group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200
                       ${item.current || isParentActive
-                        ? 'bg-primary-600 text-white'
+                        ? 'bg-progressive-600 text-white'
                         : 'text-gray-300 hover:bg-gray-700 hover:text-white'
                       }
                     `}
@@ -214,7 +214,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           className={`
                             block px-3 py-1 text-xs font-medium rounded transition-colors duration-200
                             ${subItem.current
-                              ? 'bg-primary-500 text-white'
+                              ? 'bg-progressive-500 text-white'
                               : 'text-gray-400 hover:bg-gray-700 hover:text-white'
                             }
                           `}
@@ -233,16 +233,14 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }) => {
         {/* Admin Info */}
         <div className="flex-shrink-0 p-4 bg-gray-900 border-t border-gray-700">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-progressive-600 rounded-full flex items-center justify-center">
               <span className="text-white text-sm font-medium">A</span>
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-white truncate">
                 Admin
               </p>
-              <p className="text-xs text-gray-400 truncate">
-                Central de Comando
-              </p>
+              <p className="text-xs text-gray-400 truncate">Central da Esquerda</p>
             </div>
           </div>
         </div>

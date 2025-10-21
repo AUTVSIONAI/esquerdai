@@ -179,7 +179,7 @@ const BlogManagement = () => {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Gerenciar Blog</h1>
-          <p className="text-gray-600">Gerencie os posts do Blog Patriota</p>
+          <p className="text-gray-600">Gerencie os posts do Blog Progressista</p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}

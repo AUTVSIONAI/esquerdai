@@ -38,11 +38,16 @@ const AIConversations = () => {
       // Usar a mesma lógica das atividades recentes que já funciona
       const response = await apiClient.get(`/gamification/users/${userProfile.id}/activities?limit=10`)
       
-      // A resposta pode estar em response.data ou diretamente em response
-      const activities = Array.isArray(response) ? response : (response.data || [])
+      // Garantir que activities seja um array
+      const activitiesData = response?.data
+      const activities = Array.isArray(activitiesData)
+        ? activitiesData
+        : (Array.isArray(response) ? response : [])
       
       // Filtrar apenas conversas de IA das atividades
-      const aiConversations = activities.filter(activity => activity.type === 'ai_conversation')
+      const aiConversations = Array.isArray(activities)
+        ? activities.filter(activity => activity?.type === 'ai_conversation')
+        : []
       
       // Transformar para o formato esperado pelo componente
       const formattedConversations = aiConversations.map(activity => ({
@@ -70,9 +75,14 @@ const AIConversations = () => {
       // Buscar todas as atividades para contar conversas
       const response = await apiClient.get(`/gamification/users/${userProfile.id}/activities?limit=100`)
       
-      // A resposta pode estar em response.data ou diretamente em response
-      const activities = Array.isArray(response) ? response : (response.data || [])
-      const aiConversations = activities.filter(activity => activity.type === 'ai_conversation')
+      // Garantir que activities seja um array
+      const activitiesData = response?.data
+      const activities = Array.isArray(activitiesData)
+        ? activitiesData
+        : (Array.isArray(response) ? response : [])
+      const aiConversations = Array.isArray(activities)
+        ? activities.filter(activity => activity?.type === 'ai_conversation')
+        : []
       
       // Calcular estatísticas semanais e mensais
       const weekAgo = new Date()

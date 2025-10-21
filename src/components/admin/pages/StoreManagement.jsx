@@ -315,7 +315,7 @@ const StoreManagement = () => {
     return (
       <div className="flex items-center justify-center min-h-96">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary-600" />
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-progressive-600" />
           <p className="text-gray-600">Carregando dados da loja...</p>
         </div>
       </div>
@@ -466,7 +466,7 @@ const StoreManagement = () => {
                     setOrderFilters(prev => ({ ...prev, search: e.target.value }))
                   }
                 }}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
               />
             </div>
             {activeTab === 'products' && (
@@ -474,7 +474,7 @@ const StoreManagement = () => {
                 <select
                   value={productFilters.category}
                   onChange={(e) => setProductFilters(prev => ({ ...prev, category: e.target.value }))}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                 >
                   <option value="all">Todas as Categorias</option>
                   {Array.isArray(categories) && categories.map(category => (
@@ -484,7 +484,7 @@ const StoreManagement = () => {
                 <select
                   value={productFilters.status}
                   onChange={(e) => setProductFilters(prev => ({ ...prev, status: e.target.value }))}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                 >
                   <option value="all">Todos os Status</option>
                   <option value="active">Ativo</option>
@@ -498,7 +498,7 @@ const StoreManagement = () => {
                 <select
                   value={orderFilters.status}
                   onChange={(e) => setOrderFilters(prev => ({ ...prev, status: e.target.value }))}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                 >
                   <option value="all">Todos os Status</option>
                   <option value="pending">Pendente</option>
@@ -510,7 +510,7 @@ const StoreManagement = () => {
                 <select
                   value={orderFilters.paymentStatus}
                   onChange={(e) => setOrderFilters(prev => ({ ...prev, paymentStatus: e.target.value }))}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                 >
                   <option value="all">Todos os Pagamentos</option>
                   <option value="pending">Pendente</option>
@@ -528,7 +528,7 @@ const StoreManagement = () => {
           <div className="space-y-4">
             {loading ? (
               <div className="flex justify-center items-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-primary-500" />
+                <Loader2 className="h-8 w-8 animate-spin text-progressive-500" />
                 <span className="ml-2 text-gray-600">Carregando produtos...</span>
               </div>
             ) : error ? (
@@ -625,7 +625,7 @@ const StoreManagement = () => {
           <div className="space-y-4">
             {loading ? (
               <div className="flex justify-center items-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-primary-500" />
+                <Loader2 className="h-8 w-8 animate-spin text-progressive-500" />
                 <span className="ml-2 text-gray-600">Carregando pedidos...</span>
               </div>
             ) : error ? (
@@ -1071,7 +1071,7 @@ const StoreManagement = () => {
                   id="featured"
                   checked={productForm.featured}
                   onChange={(e) => setProductForm(prev => ({ ...prev, featured: e.target.checked }))}
-                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-progressive-600 focus:ring-progressive-500 border-gray-300 rounded"
                 />
                 <label htmlFor="featured" className="ml-2 block text-sm text-gray-900">
                   Produto em destaque

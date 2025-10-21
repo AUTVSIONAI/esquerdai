@@ -448,7 +448,7 @@ const EventManagement = () => {// Estados
                 placeholder="Buscar eventos..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
               />
             </div>
           </div>
@@ -458,7 +458,7 @@ const EventManagement = () => {// Estados
             <select
               value={showType}
               onChange={(e) => setShowType(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
             >
               <option value="all">Todos os Tipos</option>
               <option value="events">Apenas Eventos</option>
@@ -468,7 +468,7 @@ const EventManagement = () => {// Estados
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
             >
               <option value="all">Todos os Status</option>
               <option value="active">Ativo</option>
@@ -480,7 +480,7 @@ const EventManagement = () => {// Estados
             <select
               value={selectedCity}
               onChange={(e) => setSelectedCity(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
             >
               <option value="all">Todas as Cidades</option>
               {cities.map(city => (
@@ -783,7 +783,7 @@ const EventManagement = () => {// Estados
                   type="text"
                   value={newEvent.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                   placeholder="Digite o título do evento"
                   required
                 />
@@ -795,7 +795,7 @@ const EventManagement = () => {// Estados
                   rows={3}
                   value={newEvent.description}
                   onChange={(e) => handleInputChange('description', e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                   placeholder="Descreva o evento"
                 />
               </div>
@@ -807,7 +807,7 @@ const EventManagement = () => {// Estados
                     type="text"
                     value={newEvent.city}
                     onChange={(e) => handleInputChange('city', e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                     placeholder="Cidade"
                     required
                   />
@@ -818,7 +818,7 @@ const EventManagement = () => {// Estados
                     type="text"
                     value={newEvent.state}
                     onChange={(e) => handleInputChange('state', e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                     placeholder="Estado"
                   />
                 </div>
@@ -830,7 +830,7 @@ const EventManagement = () => {// Estados
                   type="text"
                   value={newEvent.address}
                   onChange={(e) => handleInputChange('address', e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                   placeholder="Endereço completo"
                 />
               </div>
@@ -842,7 +842,7 @@ const EventManagement = () => {// Estados
                     type="datetime-local"
                     value={newEvent.startDate}
                     onChange={(e) => handleInputChange('startDate', e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                     required
                   />
                 </div>
@@ -852,7 +852,7 @@ const EventManagement = () => {// Estados
                     type="datetime-local"
                     value={newEvent.endDate}
                     onChange={(e) => handleInputChange('endDate', e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                     required
                   />
                 </div>
@@ -866,7 +866,7 @@ const EventManagement = () => {// Estados
                       type="text"
                       value={newEvent.secretCode}
                       onChange={(e) => handleInputChange('secretCode', e.target.value.toUpperCase())}
-                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                       placeholder="Código para check-in"
                       maxLength={6}
                     />
@@ -885,7 +885,7 @@ const EventManagement = () => {// Estados
                     type="number"
                     value={newEvent.maxCapacity}
                     onChange={(e) => handleInputChange('maxCapacity', e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                     placeholder="Número máximo de participantes"
                     min="1"
                   />
@@ -945,7 +945,7 @@ const EventManagement = () => {// Estados
                   type="text"
                   value={editingEvent.title}
                   onChange={(e) => handleEditInputChange('title', e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                   placeholder="Digite o título do evento"
                   required
                 />
@@ -957,7 +957,7 @@ const EventManagement = () => {// Estados
                   rows={3}
                   value={editingEvent.description}
                   onChange={(e) => handleEditInputChange('description', e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                   placeholder="Descreva o evento"
                 />
               </div>
@@ -969,7 +969,7 @@ const EventManagement = () => {// Estados
                     type="text"
                     value={editingEvent.city}
                     onChange={(e) => handleEditInputChange('city', e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                     placeholder="Cidade"
                     required
                   />
@@ -980,7 +980,7 @@ const EventManagement = () => {// Estados
                     type="text"
                     value={editingEvent.state}
                     onChange={(e) => handleEditInputChange('state', e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                     placeholder="Estado"
                   />
                 </div>
@@ -992,7 +992,7 @@ const EventManagement = () => {// Estados
                   type="text"
                   value={editingEvent.address}
                   onChange={(e) => handleEditInputChange('address', e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                   placeholder="Endereço completo"
                 />
               </div>
@@ -1004,7 +1004,7 @@ const EventManagement = () => {// Estados
                     type="datetime-local"
                     value={editingEvent.startDate}
                     onChange={(e) => handleEditInputChange('startDate', e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                     required
                   />
                 </div>
@@ -1014,7 +1014,7 @@ const EventManagement = () => {// Estados
                     type="datetime-local"
                     value={editingEvent.endDate}
                     onChange={(e) => handleEditInputChange('endDate', e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                     required
                   />
                 </div>
@@ -1027,7 +1027,7 @@ const EventManagement = () => {// Estados
                     type="text"
                     value={editingEvent.secretCode}
                     onChange={(e) => handleEditInputChange('secretCode', e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                     placeholder="Código para check-in"
                   />
                 </div>
@@ -1037,7 +1037,7 @@ const EventManagement = () => {// Estados
                     type="number"
                     value={editingEvent.maxCapacity}
                     onChange={(e) => handleEditInputChange('maxCapacity', e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                     placeholder="Número máximo de participantes"
                     min="1"
                   />

@@ -3,7 +3,7 @@
  */
 
 // Obter a base URL da API do ambiente
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://direitai-backend.vercel.app/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 /**
  * Converte uma URL relativa de imagem em URL absoluta

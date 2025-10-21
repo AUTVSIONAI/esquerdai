@@ -114,12 +114,12 @@ const SurveysManagement = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Gerenciar Pesquisas DireitaJá</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Gerenciar Pesquisas EsquerdaJá</h1>
           <p className="text-gray-600">Crie e gerencie pesquisas e votações populares</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 flex items-center space-x-2"
+          className="bg-progressive-600 text-white px-4 py-2 rounded-lg hover:bg-progressive-700 flex items-center space-x-2"
         >
           <Plus className="h-5 w-5" />
           <span>Nova Pesquisa</span>
@@ -134,7 +134,7 @@ const SurveysManagement = () => {
               <p className="text-sm font-medium text-gray-600">Total de Pesquisas</p>
               <p className="text-2xl font-bold text-gray-900">{surveys.length}</p>
             </div>
-            <BarChart3 className="h-8 w-8 text-primary-600" />
+            <BarChart3 className="h-8 w-8 text-progressive-600" />
           </div>
         </div>
         
@@ -192,7 +192,7 @@ const SurveysManagement = () => {
                 placeholder="Buscar pesquisas..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
               />
             </div>
           </div>
@@ -202,7 +202,7 @@ const SurveysManagement = () => {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
             >
               <option value="all">Todas</option>
               <option value="active">Ativas</option>
@@ -216,7 +216,7 @@ const SurveysManagement = () => {
       <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
         {loading ? (
           <div className="p-8 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-progressive-600 mx-auto"></div>
             <p className="mt-2 text-gray-600">Carregando pesquisas...</p>
           </div>
         ) : filteredSurveys.length === 0 ? (
@@ -225,7 +225,7 @@ const SurveysManagement = () => {
             <p className="text-gray-600">Nenhuma pesquisa encontrada</p>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="mt-4 text-primary-600 hover:text-primary-700 font-medium"
+              className="mt-4 text-progressive-600 hover:text-progressive-700 font-medium"
             >
               Criar primeira pesquisa
             </button>
@@ -464,7 +464,7 @@ const CreateSurveyModal = ({ survey, onClose, onSuccess }) => {
                 required
                 value={formData.titulo}
                 onChange={(e) => setFormData(prev => ({ ...prev, titulo: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                 placeholder="Ex: Qual sua opinião sobre...?"
               />
             </div>
@@ -477,7 +477,7 @@ const CreateSurveyModal = ({ survey, onClose, onSuccess }) => {
                 value={formData.descricao}
                 onChange={(e) => setFormData(prev => ({ ...prev, descricao: e.target.value }))}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                 placeholder="Descrição adicional da pesquisa..."
               />
             </div>
@@ -493,7 +493,7 @@ const CreateSurveyModal = ({ survey, onClose, onSuccess }) => {
                     required
                     value={opcao}
                     onChange={(e) => updateOption(index, e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                     placeholder={`Opção ${index + 1}`}
                   />
                   {formData.opcoes.length > 2 && (
@@ -511,7 +511,7 @@ const CreateSurveyModal = ({ survey, onClose, onSuccess }) => {
                 <button
                   type="button"
                   onClick={addOption}
-                  className="text-primary-600 hover:text-primary-700 text-sm font-medium"
+                  className="text-progressive-600 hover:text-progressive-700 text-sm font-medium"
                 >
                   + Adicionar opção
                 </button>
@@ -526,7 +526,7 @@ const CreateSurveyModal = ({ survey, onClose, onSuccess }) => {
                 <select
                   value={formData.tipo}
                   onChange={(e) => setFormData(prev => ({ ...prev, tipo: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                 >
                   <option value="simples">Escolha única</option>
                 <option value="multipla">Múltipla escolha</option>
@@ -540,7 +540,7 @@ const CreateSurveyModal = ({ survey, onClose, onSuccess }) => {
                 <select
                   value={formData.publico_alvo}
                   onChange={(e) => setFormData(prev => ({ ...prev, publico_alvo: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                 >
                   <option value="todos">Todos os usuários</option>
                   <option value="premium">Usuários premium</option>
@@ -559,7 +559,7 @@ const CreateSurveyModal = ({ survey, onClose, onSuccess }) => {
                 value={formData.expiracao}
                 onChange={(e) => setFormData(prev => ({ ...prev, expiracao: e.target.value }))}
                 min={new Date().toISOString().split('T')[0]}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
               />
             </div>
             
@@ -574,7 +574,7 @@ const CreateSurveyModal = ({ survey, onClose, onSuccess }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
+                className="px-4 py-2 bg-progressive-600 text-white rounded-lg hover:bg-progressive-700 disabled:opacity-50"
               >
                 {loading ? 'Salvando...' : (survey ? 'Atualizar' : 'Criar Pesquisa')}
               </button>
@@ -634,7 +634,7 @@ const SurveyStatsModal = ({ survey, onClose }) => {
           
           {loading ? (
             <div className="p-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-progressive-600 mx-auto"></div>
               <p className="mt-2 text-gray-600">Carregando estatísticas...</p>
             </div>
           ) : stats ? (
@@ -668,7 +668,7 @@ const SurveyStatsModal = ({ survey, onClose }) => {
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div 
-                            className="bg-primary-600 h-2 rounded-full transition-all duration-300"
+                            className="bg-progressive-600 h-2 rounded-full transition-all duration-300"
                             style={{ width: `${result.percentual}%` }}
                           ></div>
                         </div>

@@ -59,7 +59,7 @@ const AdminHeader = ({ setSidebarOpen }) => {
           
           <div className="hidden md:block">
             <h1 className="text-xl font-semibold text-gray-900">
-              Central de Comando da Direita
+              Central de Comando da Esquerda
             </h1>
           </div>
         </div>
@@ -73,7 +73,7 @@ const AdminHeader = ({ setSidebarOpen }) => {
             <input
               type="text"
               placeholder="Buscar usuários, eventos..."
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-progressive-500 focus:border-progressive-500"
             />
           </div>
         </div>
@@ -127,7 +127,7 @@ const AdminHeader = ({ setSidebarOpen }) => {
                   ))}
                 </div>
                 <div className="p-4 border-t border-gray-200">
-                  <button className="text-sm text-primary-600 hover:text-primary-700 font-medium">
+                  <button className="text-sm text-progressive-600 hover:text-progressive-700 font-medium">
                     Ver todas as notificações
                   </button>
                 </div>
@@ -141,7 +141,7 @@ const AdminHeader = ({ setSidebarOpen }) => {
               onClick={() => setShowUserMenu(!showUserMenu)}
               className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100"
             >
-              <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-progressive-600 rounded-full flex items-center justify-center">
                 <Shield className="h-4 w-4 text-white" />
               </div>
               <div className="hidden md:block text-left">
@@ -186,7 +186,7 @@ const AdminHeader = ({ setSidebarOpen }) => {
           <input
             type="text"
             placeholder="Buscar..."
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
+            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-progressive-500 focus:border-progressive-500"
           />
         </div>
       </div>

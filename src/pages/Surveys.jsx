@@ -120,14 +120,14 @@ const Surveys = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-progressive-50 to-progressive-100 flex items-center justify-center">
         <div className="text-gray-900 text-xl">Carregando pesquisas...</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">
+    <div className="min-h-screen bg-gradient-to-br from-progressive-50 to-progressive-100 flex items-center justify-center">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 shadow-soft">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -135,22 +135,22 @@ const Surveys = () => {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => navigate('/dashboard')}
-                className="flex items-center space-x-2 text-primary-700 hover:text-primary-600 transition-colors"
+                className="flex items-center space-x-2 text-progressive-700 hover:text-progressive-600 transition-colors"
               >
                 <ArrowLeft className="h-5 w-5" />
                 <span>Voltar</span>
               </button>
               <div className="flex items-center space-x-3">
-                <BarChart3 className="h-8 w-8 text-primary-600" />
+                <BarChart3 className="h-8 w-8 text-progressive-600" />
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900">Pesquisas DireitaJá</h1>
+                  <h1 className="text-3xl font-bold text-gray-900">Pesquisas EsquerdaJá</h1>
                   <p className="text-gray-600">Participe das pesquisas e faça sua voz ser ouvida</p>
                 </div>
               </div>
             </div>
             <Link
               to="/resultados"
-              className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors"
+              className="bg-progressive-600 hover:bg-progressive-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors"
             >
               Ver Resultados
             </Link>
@@ -167,7 +167,7 @@ const Surveys = () => {
                 onClick={() => setFilter('active')}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                   filter === 'active'
-                    ? 'bg-primary-600 text-white'
+                    ? 'bg-progressive-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -177,7 +177,7 @@ const Surveys = () => {
                 onClick={() => setFilter('completed')}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                   filter === 'completed'
-                    ? 'bg-primary-600 text-white'
+                    ? 'bg-progressive-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -187,7 +187,7 @@ const Surveys = () => {
                 onClick={() => setFilter('all')}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                   filter === 'all'
-                    ? 'bg-primary-600 text-white'
+                    ? 'bg-progressive-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -200,7 +200,7 @@ const Surveys = () => {
                 placeholder="Buscar pesquisas..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg bg-white text-gray-900 placeholder-gray-500 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-2 rounded-lg bg-white text-gray-900 placeholder-gray-500 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-progressive-500"
               />
             </div>
           </div>
@@ -238,7 +238,7 @@ const Surveys = () => {
                           <span>Expira em {formatDate(survey.expiracao)}</span>
                         </div>
                         {survey.tipo === 'multipla' && (
-                          <span className="bg-primary-100 text-primary-700 px-2 py-1 rounded text-xs">Múltipla escolha</span>
+                          <span className="bg-progressive-100 text-progressive-700 px-2 py-1 rounded text-xs">Múltipla escolha</span>
                         )}
                       </div>
                     </div>
@@ -267,9 +267,9 @@ const Surveys = () => {
                                 ? 'cursor-not-allowed bg-gray-50 border-gray-200'
                                 : userVoted
                                 ? 'cursor-pointer bg-gray-50 border-gray-300 hover:bg-gray-100'
-                                : 'hover:bg-primary-50 bg-white border-primary-200 hover:border-primary-300'
+                                : 'hover:bg-progressive-50 bg-white border-progressive-200 hover:border-progressive-300'
                             } ${
-                              isSelected ? 'ring-2 ring-primary-500 bg-primary-50' : ''
+                              isSelected ? 'ring-2 ring-progressive-500 bg-progressive-50' : ''
                             }`}
                           >
                             <div className="flex items-center justify-between">
@@ -278,13 +278,13 @@ const Surveys = () => {
                                 {(expired || userVoted) && (
                                   <span className="text-gray-600 text-sm">{percentage}%</span>
                                 )}
-                                {isSelected && <Vote className="h-4 w-4 text-primary-600" />}
+                                {isSelected && <Vote className="h-4 w-4 text-progressive-600" />}
                               </div>
                             </div>
                             {(expired || userVoted) && (
                               <div className="mt-2 bg-gray-200 rounded-full h-2">
                                 <div
-                                  className="bg-primary-600 h-2 rounded-full transition-all duration-500"
+                                  className="bg-progressive-600 h-2 rounded-full transition-all duration-500"
                                   style={{ width: `${percentage}%` }}
                                 />
                               </div>
@@ -308,7 +308,7 @@ const Surveys = () => {
                       <div className="flex items-center space-x-2">
                         <Link
                           to={`/pesquisa/${survey.id}`}
-                          className="text-primary-600 hover:text-primary-700 text-sm font-medium"
+                          className="text-progressive-600 hover:text-progressive-700 text-sm font-medium"
                         >
                           Ver detalhes
                         </Link>
@@ -344,7 +344,7 @@ const Surveys = () => {
               </button>
               <button
                 onClick={confirmVote}
-                className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                className="flex-1 px-4 py-2 bg-progressive-600 text-white rounded-lg hover:bg-progressive-700 transition-colors"
               >
                 Confirmar Voto
               </button>

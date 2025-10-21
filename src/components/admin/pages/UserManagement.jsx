@@ -286,7 +286,7 @@ const UserManagement = () => {
                 placeholder="Buscar usuários..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
               />
             </div>
           </div>
@@ -296,7 +296,7 @@ const UserManagement = () => {
             <select
               value={selectedPlan}
               onChange={(e) => setSelectedPlan(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
             >
               <option value="all">Todos os Planos</option>
               <option value="gratuito">Gratuito</option>
@@ -307,7 +307,7 @@ const UserManagement = () => {
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
             >
               <option value="all">Todos os Status</option>
               <option value="active">Ativo</option>
@@ -352,7 +352,7 @@ const UserManagement = () => {
                 <tr>
                   <td colSpan="7" className="px-6 py-12 text-center">
                     <div className="flex items-center justify-center">
-                      <Loader2 className="h-6 w-6 animate-spin text-primary-600 mr-2" />
+                      <Loader2 className="h-6 w-6 animate-spin text-progressive-600 mr-2" />
                       <span className="text-gray-500">Carregando usuários...</span>
                     </div>
                   </td>
@@ -389,8 +389,8 @@ const UserManagement = () => {
                   <tr key={user.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                          <span className="text-primary-600 font-medium text-sm">
+                        <div className="w-10 h-10 bg-progressive-100 rounded-full flex items-center justify-center">
+                          <span className="text-progressive-600 font-medium text-sm">
                             {(user.full_name || user.email || 'U').charAt(0).toUpperCase()}
                           </span>
                         </div>
@@ -501,8 +501,8 @@ const UserManagement = () => {
             
             <div className="space-y-4">
               <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center">
-                  <span className="text-primary-600 font-bold text-xl">
+                <div className="w-16 h-16 bg-progressive-100 rounded-full flex items-center justify-center">
+                  <span className="text-progressive-600 font-bold text-xl">
                     {(selectedUser.full_name || selectedUser.email || 'U').charAt(0).toUpperCase()}
                   </span>
                 </div>
@@ -582,7 +582,7 @@ const UserManagement = () => {
                     type="text"
                     value={editingUser.full_name}
                     onChange={(e) => handleEditInputChange('full_name', e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                     placeholder="Nome completo do usuário"
                     required
                   />
@@ -594,7 +594,7 @@ const UserManagement = () => {
                     type="text"
                     value={editingUser.username}
                     onChange={(e) => handleEditInputChange('username', e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                     placeholder="Nome de usuário"
                   />
                 </div>
@@ -606,7 +606,7 @@ const UserManagement = () => {
                   type="email"
                   value={editingUser.email}
                   onChange={(e) => handleEditInputChange('email', e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                   placeholder="Email do usuário"
                   required
                 />
@@ -619,7 +619,7 @@ const UserManagement = () => {
                     type="text"
                     value={editingUser.city}
                     onChange={(e) => handleEditInputChange('city', e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                     placeholder="Cidade"
                   />
                 </div>
@@ -630,7 +630,7 @@ const UserManagement = () => {
                     type="text"
                     value={editingUser.state}
                     onChange={(e) => handleEditInputChange('state', e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                     placeholder="Estado"
                   />
                 </div>
@@ -641,7 +641,7 @@ const UserManagement = () => {
                 <select
                   value={editingUser.plan}
                   onChange={(e) => handleEditInputChange('plan', e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
                 >
                   <option value="gratuito">Gratuito</option>
                   <option value="engajado">Engajado</option>

@@ -22,18 +22,19 @@ import {
   Phone,
   MapPin
 } from 'lucide-react';
+import { BRAND } from '../utils/brand'
 
 const HomePage = () => {
   const features = [
     {
       icon: MessageSquare,
-      title: 'DireitaIA',
-      description: 'IA especializada em política conservadora e direita brasileira'
+      title: 'EsquerdaIA',
+      description: 'IA especializada em política progressista e esquerda brasileira'
     },
     {
       icon: BookOpen,
-      title: 'Blog Patriota',
-      description: 'Artigos e notícias sobre política conservadora e direita brasileira',
+      title: 'Blog Progressista',
+      description: 'Artigos e notícias sobre política progressista e esquerda brasileira',
       link: '/blog'
     },
     {
@@ -50,7 +51,7 @@ const HomePage = () => {
     },
     {
       icon: BarChart3,
-      title: 'Pesquisas DireitaJá',
+      title: 'Pesquisas EsquerdaJá',
       description: 'Participe de enquetes e pesquisas sobre temas nacionais',
       link: '/pesquisas'
     },
@@ -62,13 +63,13 @@ const HomePage = () => {
     },
     {
       icon: Calendar,
-      title: 'Eventos Patriotas',
+      title: 'Eventos Progressistas',
       description: 'Encontre e participe de eventos conservadores em todo o Brasil'
     },
     {
       icon: Users,
       title: 'Comunidade Ativa',
-      description: 'Conecte-se com outros patriotas e conservadores'
+      description: 'Conecte-se com outros progressistas e ativistas'
     }
   ];
 
@@ -82,7 +83,7 @@ const HomePage = () => {
     {
       name: 'Maria Santos',
       role: 'Advogada',
-      content: 'O DireitaIA me ajuda muito nas discussões políticas do dia a dia.',
+      content: 'A EsquerdaIA me ajuda muito nas discussões políticas do dia a dia.',
       rating: 5
     },
     {
@@ -107,11 +108,11 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-3">
-              <div className="bg-gradient-to-br from-conservative-500 to-conservative-600 p-2 rounded-xl">
+              <div className="bg-gradient-to-br from-progressive-500 to-progressive-600 p-2 rounded-xl">
                 <Flag className="h-6 w-6 text-white" />
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-primary-700 to-primary-900 bg-clip-text text-transparent">
-                Direitai.com
+                {BRAND.domain}
               </span>
             </div>
             <div className="flex items-center space-x-6">
@@ -163,8 +164,8 @@ const HomePage = () => {
                   Entrar
                 </Link>
                 <Link 
-                  to="/login" 
-                  className="bg-gradient-to-r from-conservative-500 to-conservative-600 hover:from-conservative-600 hover:to-conservative-700 text-white px-6 py-2 rounded-lg text-sm font-medium shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5"
+                  to="/register" 
+                  className="bg-gradient-to-r from-progressive-500 to-progressive-600 hover:from-progressive-600 hover:to-progressive-700 text-white px-6 py-2 rounded-lg text-sm font-medium shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5"
                 >
                   Cadastrar
                 </Link>
@@ -181,28 +182,28 @@ const HomePage = () => {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-conservative-500/20 text-conservative-300 text-sm font-medium mb-6 backdrop-blur-sm">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-progressive-500/20 text-progressive-300 text-sm font-medium mb-6 backdrop-blur-sm">
               <Flag className="h-4 w-4 mr-2" />
-              Plataforma Oficial dos Patriotas Brasileiros
+              Plataforma Oficial dos Progressistas Brasileiros
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
               A Central do{' '}
-              <span className="bg-gradient-to-r from-conservative-400 to-conservative-600 bg-clip-text text-transparent">
-                Patriota
+              <span className="bg-gradient-to-r from-progressive-400 to-progressive-600 bg-clip-text text-transparent">
+                Progressista
               </span>{' '}
               Brasileiro
             </h1>
             
             <p className="text-xl md:text-2xl text-primary-200 mb-10 max-w-4xl mx-auto leading-relaxed">
-              Conecte-se com outros conservadores, participe de eventos patrióticos e 
-              converse com nossa IA especializada em política de direita.
+              Conecte-se com outros progressistas e ativistas, participe de eventos e 
+              converse com nossa IA especializada em política de esquerda.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link 
                 to="/login" 
-                className="group bg-gradient-to-r from-conservative-500 to-conservative-600 hover:from-conservative-600 hover:to-conservative-700 text-white px-10 py-4 rounded-xl text-lg font-semibold flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                className="group bg-gradient-to-r from-progressive-500 to-progressive-600 hover:from-progressive-600 hover:to-progressive-700 text-white px-10 py-4 rounded-xl text-lg font-semibold flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
               >
                 <span>Começar Agora</span>
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -215,8 +216,8 @@ const HomePage = () => {
         </div>
         
         {/* Decorative Elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 bg-conservative-500/20 rounded-full blur-xl"></div>
-        <div className="absolute bottom-20 right-10 w-32 h-32 bg-conservative-400/20 rounded-full blur-xl"></div>
+        <div className="absolute top-20 left-10 w-20 h-20 bg-progressive-500/20 rounded-full blur-xl"></div>
+        <div className="absolute bottom-20 right-10 w-32 h-32 bg-progressive-400/20 rounded-full blur-xl"></div>
       </section>
 
       {/* Stats Section */}
@@ -292,14 +293,14 @@ const HomePage = () => {
 
       {/* Testimonials Section */}
       <section className="py-24 bg-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-50/30 to-conservative-50/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-50/30 to-progressive-50/30"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="text-center mb-20">
             <h2 className="text-4xl font-bold bg-gradient-to-r from-primary-700 to-primary-900 bg-clip-text text-transparent mb-6">
               O que nossos usuários dizem
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Depoimentos reais de patriotas que já fazem parte da nossa comunidade
+              Depoimentos reais de progressistas que já fazem parte da nossa comunidade
             </p>
           </div>
           
@@ -308,7 +309,7 @@ const HomePage = () => {
               <div key={index} className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
                 <div className="flex items-center mb-6">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 text-conservative-400 fill-current" />
+                    <Star key={i} className="h-5 w-5 text-progressive-400 fill-current" />
                   ))}
                 </div>
                 <p className="text-gray-700 mb-8 italic text-lg leading-relaxed">
@@ -330,26 +331,26 @@ const HomePage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 relative overflow-hidden">
+      <section className="py-24 bg-gradient-to-br from-progressive-600 via-progressive-700 to-progressive-800 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/10"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-              Junte-se ao movimento conservador brasileiro
+              Junte-se ao movimento progressista brasileiro
             </h2>
-            <p className="text-xl text-primary-100 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Faça parte da maior comunidade conservadora do Brasil. Cadastre-se agora e tenha acesso a todas as ferramentas exclusivas para fortalecer nossos valores.
+            <p className="text-xl text-progressive-100 mb-12 max-w-3xl mx-auto leading-relaxed">
+              Faça parte da maior comunidade progressista do Brasil. Cadastre-se agora e tenha acesso a todas as ferramentas exclusivas para fortalecer nossos valores.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <Link 
                 to="/login" 
-                className="bg-white text-primary-700 px-10 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl shadow-lg"
+                className="bg-white text-progressive-700 px-10 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl shadow-lg"
               >
                 Cadastrar Agora
               </Link>
               <Link 
                 to="/blog" 
-                className="border-2 border-white text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-primary-700 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl"
+                className="border-2 border-white text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-progressive-700 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl"
               >
                 Conhecer Mais
               </Link>
@@ -382,26 +383,26 @@ const HomePage = () => {
                   <Flag className="h-6 w-6 text-white" />
                 </div>
                 <span className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                  Direitai.com
+                  {BRAND.domain}
                 </span>
               </div>
               <p className="text-gray-300 mb-6 leading-relaxed text-lg">
-                A maior plataforma conservadora do Brasil. Conectando patriotas, defendendo valores e fortalecendo a democracia brasileira.
+                A maior plataforma progressista do Brasil. Conectando ativistas, defendendo direitos e fortalecendo a democracia brasileira.
               </p>
               <div className="flex space-x-4">
-                <a href="#" className="bg-gray-800 hover:bg-conservative-600 p-3 rounded-lg transition-all duration-300 transform hover:-translate-y-1">
+                <a href="#" className="bg-gray-800 hover:bg-progressive-600 p-3 rounded-lg transition-all duration-300 transform hover:-translate-y-1">
                   <span className="sr-only">Facebook</span>
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
                   </svg>
                 </a>
-                <a href="#" className="bg-gray-800 hover:bg-conservative-600 p-3 rounded-lg transition-all duration-300 transform hover:-translate-y-1">
+                <a href="#" className="bg-gray-800 hover:bg-progressive-600 p-3 rounded-lg transition-all duration-300 transform hover:-translate-y-1">
                   <span className="sr-only">Twitter</span>
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
                   </svg>
                 </a>
-                <a href="#" className="bg-gray-800 hover:bg-conservative-600 p-3 rounded-lg transition-all duration-300 transform hover:-translate-y-1">
+                <a href="#" className="bg-gray-800 hover:bg-progressive-600 p-3 rounded-lg transition-all duration-300 transform hover:-translate-y-1">
                   <span className="sr-only">Instagram</span>
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987s11.987-5.367 11.987-11.987C24.014 5.367 18.647.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.49-3.323-1.297C4.198 14.895 3.708 13.744 3.708 12.447s.49-2.448 1.418-3.323C6.001 8.198 7.152 7.708 8.449 7.708s2.448.49 3.323 1.416c.875.875 1.365 2.026 1.365 3.323s-.49 2.448-1.365 3.323c-.875.807-2.026 1.218-3.323 1.218zm7.718-1.297c-.875.875-2.026 1.365-3.323 1.365s-2.448-.49-3.323-1.365c-.875-.875-1.365-2.026-1.365-3.323s.49-2.448 1.365-3.323c.875-.875 2.026-1.365 3.323-1.365s2.448.49 3.323 1.365c.875.875 1.365 2.026 1.365 3.323s-.49 2.448-1.365 3.323z" />
@@ -413,10 +414,10 @@ const HomePage = () => {
             <div>
               <h3 className="text-xl font-bold mb-6 text-white">Navegação</h3>
               <ul className="space-y-3">
-                <li><Link to="/blog" className="text-gray-300 hover:text-conservative-400 transition-colors duration-200 flex items-center space-x-2"><BookOpen className="h-4 w-4" /><span>Blog</span></Link></li>
-                <li><Link to="/politicos" className="text-gray-300 hover:text-conservative-400 transition-colors duration-200 flex items-center space-x-2"><UserCheck className="h-4 w-4" /><span>Políticos</span></Link></li>
-                <li><Link to="/pesquisas" className="text-gray-300 hover:text-conservative-400 transition-colors duration-200 flex items-center space-x-2"><BarChart3 className="h-4 w-4" /><span>Pesquisas</span></Link></li>
-                <li><Link to="/verdade-ou-fake" className="text-gray-300 hover:text-conservative-400 transition-colors duration-200 flex items-center space-x-2"><Shield className="h-4 w-4" /><span>Verdade ou Fake</span></Link></li>
+                <li><Link to="/blog" className="text-gray-300 hover:text-progressive-400 transition-colors duration-200 flex items-center space-x-2"><BookOpen className="h-4 w-4" /><span>Blog</span></Link></li>
+                <li><Link to="/politicos" className="text-gray-300 hover:text-progressive-400 transition-colors duration-200 flex items-center space-x-2"><UserCheck className="h-4 w-4" /><span>Políticos</span></Link></li>
+                <li><Link to="/pesquisas" className="text-gray-300 hover:text-progressive-400 transition-colors duration-200 flex items-center space-x-2"><BarChart3 className="h-4 w-4" /><span>Pesquisas</span></Link></li>
+                <li><Link to="/verdade-ou-fake" className="text-gray-300 hover:text-progressive-400 transition-colors duration-200 flex items-center space-x-2"><Shield className="h-4 w-4" /><span>Verdade ou Fake</span></Link></li>
               </ul>
             </div>
             
@@ -424,15 +425,15 @@ const HomePage = () => {
               <h3 className="text-xl font-bold mb-6 text-white">Contato</h3>
               <ul className="space-y-3 text-gray-300">
                 <li className="flex items-center space-x-2">
-                  <Mail className="h-4 w-4 text-conservative-400" />
-                  <span>contato@direitai.com</span>
+                  <Mail className="h-4 w-4 text-progressive-400" />
+                  <span>{`contato@${BRAND.domain}`}</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <Phone className="h-4 w-4 text-conservative-400" />
+                  <Phone className="h-4 w-4 text-progressive-400" />
                   <span>(11) 99999-9999</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <MapPin className="h-4 w-4 text-conservative-400" />
+                  <MapPin className="h-4 w-4 text-progressive-400" />
                   <span>São Paulo, SP</span>
                 </li>
               </ul>
@@ -441,7 +442,7 @@ const HomePage = () => {
           
           <div className="border-t border-gray-700 mt-12 pt-8 text-center">
             <p className="text-gray-400 text-lg">
-              &copy; 2024 <span className="text-conservative-400 font-semibold">Direitai.com</span>. Todos os direitos reservados.
+              &copy; 2024 <span className="text-progressive-400 font-semibold">{BRAND.domain}</span>. Todos os direitos reservados.
             </p>
           </div>
         </div>
