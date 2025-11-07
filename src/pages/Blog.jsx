@@ -7,6 +7,7 @@ import {
   Search, Filter, Calendar, User, Eye, Tag, Heart, MessageCircle, 
   Share2, TrendingUp, Zap, Globe, ArrowLeft, Star, Clock
 } from 'lucide-react';
+import { getAbsoluteImageUrl } from '../utils/imageUtils';
 
 const Blog = () => {
   const [posts, setPosts] = useState([]);
@@ -101,31 +102,31 @@ const Blog = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Header do Site de Notícias */}
-      <header className="bg-gradient-to-r from-blue-900 to-blue-800 text-white shadow-lg">
+      <header className="bg-gradient-to-r from-progressive-900 to-progressive-800 text-white shadow-lg">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
-              <Link to="/dashboard" className="flex items-center gap-2 text-blue-200 hover:text-white transition-colors">
+              <Link to="/dashboard" className="flex items-center gap-2 text-progressive-200 hover:text-white transition-colors">
                 <ArrowLeft className="h-5 w-5" />
                 <span>Voltar ao Dashboard</span>
               </Link>
-              <Link to="/" className="text-2xl font-bold hover:text-blue-200 transition-colors">
+              <Link to="/" className="text-2xl font-bold hover:text-progressive-200 transition-colors">
                 Esquerdai News
               </Link>
             </div>
             <nav className="hidden md:flex items-center gap-6">
-              <Link to="/blog" className="hover:text-blue-200 transition-colors font-medium">Notícias</Link>
-              <Link to="/politicos" className="hover:text-blue-200 transition-colors">Políticos</Link>
-              <Link to="/verdade-ou-fake" className="hover:text-blue-200 transition-colors">Fact Check</Link>
+              <Link to="/blog" className="hover:text-progressive-200 transition-colors font-medium">Notícias</Link>
+              <Link to="/politicos" className="hover:text-progressive-200 transition-colors">Políticos</Link>
+              <Link to="/verdade-ou-fake" className="hover:text-progressive-200 transition-colors">Fact Check</Link>
             </nav>
           </div>
-          
+
           {/* Hero Section */}
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Últimas Notícias
             </h1>
-            <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+            <p className="text-xl text-progressive-100 max-w-2xl mx-auto">
               Acompanhe as principais notícias e análises sobre política brasileira
             </p>
           </div>
@@ -142,7 +143,7 @@ const Blog = () => {
             {/* Busca Avançada */}
             <form onSubmit={handleSearch} className="flex-1 max-w-2xl">
               <div className="relative group">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 w-5 h-5 transition-colors" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-progressive-500 w-5 h-5 transition-colors" />
                 <input
                   type="text"
                   placeholder="Busque por notícias, análises, temas..."
@@ -153,7 +154,7 @@ const Blog = () => {
                 {/* Indicador de busca ativa */}
                 {searchTerm && (
                   <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-progressive-500 rounded-full animate-pulse"></div>
                   </div>
                 )}
               </div>
@@ -304,11 +305,11 @@ const Blog = () => {
               <article key={post.id} className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 border border-gray-200/50 hover:border-blue-300/50 transform hover:-translate-y-2">
                 {/* Imagem com overlay */}
                 {post.featured_image_url && (
-                  <div className="relative h-56 overflow-hidden">
+                  <div className="relative h-56 overflow-hidden bg-gray-100 flex items-center justify-center">
                     <img
-                      src={post.featured_image_url}
+                      src={getAbsoluteImageUrl(post.featured_image_url)}
                       alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      className="max-h-full w-full object-contain group-hover:scale-110 transition-transform duration-700"
                     />
                     {/* Overlay gradiente */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -316,7 +317,7 @@ const Blog = () => {
                     {/* Badge de categoria */}
                     {post.politician_tags && post.politician_tags.length > 0 && (
                       <div className="absolute top-4 left-4">
-                        <span className="px-3 py-1 bg-blue-600/90 backdrop-blur-sm text-white text-xs font-bold rounded-full border border-white/20">
+                        <span className="px-3 py-1 bg-progressive-600/90 backdrop-blur-sm text-white text-xs font-bold rounded-full border border-white/20">
                           👤 {post.politician_tags[0].tag_name}
                         </span>
                       </div>
@@ -326,7 +327,7 @@ const Blog = () => {
 
                 <div className="p-6 space-y-4">
                   {/* Título */}
-                  <h2 className="text-xl font-bold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors duration-300">
+                  <h2 className="text-xl font-bold text-gray-900 line-clamp-2 group-hover:text-progressive-600 transition-colors duration-300">
                     <Link to={`/blog/${post.slug}`} className="hover:underline">
                       {post.title}
                     </Link>
@@ -363,7 +364,7 @@ const Blog = () => {
                         <MessageCircle className="w-4 h-4" />
                         <span className="font-medium">{post.comments_count || 0}</span>
                       </div>
-                      <div className="flex items-center gap-1 text-green-500 hover:text-green-600 transition-colors">
+                      <div className="flex items-center gap-1 text-progressive-500 hover:text-progressive-600 transition-colors">
                         <Share2 className="w-4 h-4" />
                         <span className="font-medium">{post.shares_count || 0}</span>
                       </div>
@@ -445,7 +446,7 @@ const Blog = () => {
               className={`group flex items-center gap-2 px-5 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${
                 currentPage === totalPages
                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-600 text-gray-700 hover:text-white shadow-lg hover:shadow-xl border border-gray-200 hover:border-transparent'
+                  : 'bg-white hover:bg-gradient-to-r hover:from-progressive-500 hover:to-progressive-700 text-gray-700 hover:text-white shadow-lg hover:shadow-xl border border-gray-200 hover:border-transparent'
               }`}
             >
               <span className="hidden sm:inline">Próximo</span>
@@ -460,8 +461,8 @@ const Blog = () => {
         {posts.length > 0 && (
           <div className="text-center mt-6">
             <p className="text-sm text-gray-500 font-medium">
-              Página <span className="text-blue-600 font-bold">{currentPage}</span> de{' '}
-              <span className="text-blue-600 font-bold">{totalPages}</span>
+              Página <span className="text-progressive-600 font-bold">{currentPage}</span> de{' '}
+              <span className="text-progressive-600 font-bold">{totalPages}</span>
             </p>
           </div>
         )}

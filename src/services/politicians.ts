@@ -264,7 +264,7 @@ export class PoliticiansService {
       // Envia todos os deputados em uma única requisição
       const response = await apiClient.post('/admin/politicians/sync/deputados', {
         deputados: deputadosData
-      });
+      }, { timeout: 120000 });
       
       return {
         success: response.data.summary.success,
@@ -288,7 +288,7 @@ export class PoliticiansService {
       // Envia todos os senadores em uma única requisição
       const response = await apiClient.post('/admin/politicians/sync/senadores', {
         senadores: senadoresData
-      });
+      }, { timeout: 120000 });
       
       return {
         success: response.data.summary.success,

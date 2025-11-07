@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { signIn, signUp } from '../../lib/supabase'
 import { Flag, Shield, Users, ArrowLeft } from 'lucide-react'
 import { BRAND } from '../../utils/brand'
+import { apiClient } from '../../lib/api'
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true)
@@ -20,24 +21,48 @@ const Login = () => {
 
     try {
       if (isLogin) {
-        const { data, error } = await signIn(email, password)
+        const signInPromise = signIn(email, password)
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Tempo de login excedido, tente novamente.')), 6000))
+        const { data, error } = await Promise.race([signInPromise, timeoutPromise])
         if (error) throw error
+
+        // Tentativa extra: se race estourou mas sessão existe, segue
+        if (!data?.user) {
+          try {
+            const { data: { session } } = await import('../../lib/supabase').then(m => m.supabase.auth.getSession())
+            if (session?.user) {
+              // Sessão válida mesmo sem data.user
+            } else {
+              throw new Error('Falha ao obter sessão de login.')
+            }
+          } catch (sessErr) {
+            throw sessErr
+          }
+        }
         
-        // Verificar se é admin para redirecionar
-        if (data.user?.email === BRAND.adminEmail) {
+        // Redirecionamento por papel
+        if (data?.user?.email === BRAND.adminEmail) {
           navigate('/admin')
         } else {
-          navigate('/dashboard')
+          // Verificar se o usuário é um político e tem agente vinculado
+          try {
+            const meResponse = await apiClient.get('/politicians/me')
+            if (meResponse?.data?.success && meResponse?.data?.data) {
+              navigate('/me/politico')
+            } else {
+              navigate('/dashboard')
+            }
+          } catch (checkErr) {
+            // Em caso de falha na verificação, seguir para dashboard
+            navigate('/dashboard')
+          }
         }
       } else {
-        const userData = {
-          username,
-          plan: 'gratuito',
-          role: 'user'
-        }
-        const { data, error } = await signUp(email, password, userData)
+        const userData = { username, plan: 'gratuito', role: 'user' }
+        const signUpPromise = signUp(email, password, userData)
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Tempo de cadastro excedido, tente novamente.')), 6000))
+        const { data, error } = await Promise.race([signUpPromise, timeoutPromise])
         if (error) throw error
-        
         alert('Cadastro realizado! Verifique seu email para confirmar a conta.')
         setIsLogin(true)
       }
@@ -49,7 +74,7 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-conservative-50">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-progressive-50">
       <div className="max-w-md w-full space-y-8 p-8">
         <div className="text-center">
           <div className="flex justify-between items-center mb-4">

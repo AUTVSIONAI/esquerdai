@@ -56,7 +56,7 @@ const SystemSettings = () => {
           {message && (
             <div className={`mb-4 p-4 rounded-md ${
               message.includes('sucesso') 
-                ? 'bg-green-50 text-green-700 border border-green-200'
+                ? 'bg-success-50 text-success-700 border border-success-200'
                 : 'bg-red-50 text-red-700 border border-red-200'
             }`}>
               {message}

@@ -63,7 +63,7 @@ const EventManagement = () => {// Estados
       
       const filters = {}
       if (selectedStatus !== 'all') filters.status = selectedStatus
-      if (selectedCity !== 'all') filters.location = selectedCity
+      if (selectedCity !== 'all') filters.city = selectedCity
       
       const response = await EventsService.getEvents(filters)
       setEvents(response.events || [])
@@ -117,25 +117,66 @@ const EventManagement = () => {// Estados
 
   // Combinar eventos e manifestações para exibição
   const getAllItems = () => {
+    const normalizeStatus = (s) => {
+      const map = {
+        ativo: 'active',
+        active: 'active',
+        concluido: 'completed',
+        completed: 'completed',
+        rascunho: 'draft',
+        draft: 'draft',
+        cancelado: 'cancelled',
+        cancelled: 'cancelled'
+      }
+      return map[s] || 'draft'
+    }
+
     let items = []
-    
+
     if (showType === 'all' || showType === 'events') {
-      items = [...items, ...events.map(event => ({ ...event, type: 'event' }))]
+      items = [
+        ...items,
+        ...events.map(event => ({
+          ...event,
+          type: 'event',
+          title: event.title,
+          location: {
+            city: event.city || event.location?.city || '',
+            state: event.state || event.location?.state || '',
+            address: event.address || event.location || ''
+          },
+          date: event.start_date || event.date || event.startDate,
+          endDate: event.end_date || event.endDate,
+          maxCapacity: event.max_participants ?? event.capacity ?? 0,
+          checkins: event.current_participants ?? event.checkins ?? 0,
+          status: normalizeStatus(event.status),
+          secretCode: event.secret_code || event.code || event.checkin_code || ''
+        }))
+      ]
     }
-    
+
     if (showType === 'all' || showType === 'manifestations') {
-      items = [...items, ...manifestations.map(manifestation => ({ 
-        ...manifestation, 
-        type: 'manifestation',
-        title: manifestation.name,
-        location: { city: manifestation.city, state: manifestation.state, address: manifestation.address },
-        date: manifestation.start_date,
-        endDate: manifestation.end_date,
-        maxCapacity: manifestation.max_participants,
-        checkins: manifestation.current_participants || 0
-      }))]
+      items = [
+        ...items,
+        ...manifestations.map(manifestation => ({
+          ...manifestation,
+          type: 'manifestation',
+          title: manifestation.name || manifestation.title,
+          location: {
+            city: manifestation.city,
+            state: manifestation.state,
+            address: manifestation.address
+          },
+          date: manifestation.start_date || manifestation.date,
+          endDate: manifestation.end_date || manifestation.endDate,
+          maxCapacity: manifestation.max_participants ?? manifestation.capacity ?? 0,
+          checkins: manifestation.current_participants ?? manifestation.checkins ?? 0,
+          status: normalizeStatus(manifestation.status || 'active'),
+          secretCode: manifestation.secret_code || ''
+        }))
+      ]
     }
-    
+
     return items
   }
   

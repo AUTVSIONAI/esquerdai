@@ -54,28 +54,16 @@ const Overview = () => {
     }
   }, [userStats, userPoints, userGoals])
 
-  // Função para obter o user_id correto da tabela public.users
+  // Função para obter o user_id via backend (evita RLS recursiva)
   const getUserId = async () => {
     if (!userProfile?.id) return null
-    
     try {
-      // Buscar o user_id da tabela public.users usando o auth_id
-      const { data: user, error } = await supabase
-        .from('users')
-        .select('id')
-        .eq('auth_id', userProfile.id)
-        .single()
-      
-      if (error) {
-        console.error('❌ Overview - Erro ao buscar user_id:', error)
-        return userProfile.id // fallback para auth_id
-      }
-      
-      console.log('🔑 Overview - user_id encontrado:', user.id, 'para auth_id:', userProfile.id)
-      return user.id
+      const res = await apiClient.get('users/profile')
+      const id = res?.data?.id || res?.data?.userId || res?.data?.data?.id
+      return id || userProfile.id
     } catch (error) {
-      console.error('❌ Overview - Erro ao resolver user_id:', error)
-      return userProfile.id // fallback para auth_id
+      console.error('❌ Overview - Erro ao resolver user_id via backend:', error)
+      return userProfile.id
     }
   }
 
@@ -91,22 +79,23 @@ const Overview = () => {
       if (!userId) return
       
       // Buscar dados de gamificação reais usando o user_id
-      const gamificationResponse = await apiClient.get(`/gamification/users/${userId}/stats`)
+      const gamificationResponse = await apiClient.get(`gamification/users/${userId}/stats`)
+      const gamificationStats = gamificationResponse?.data || {}
       console.log('📊 Dados de gamificação:', gamificationResponse)
       
       // Buscar estatísticas do usuário (incluindo conversas de IA reais)
-        const statsResponse = await apiClient.get(`/users/${userId}/stats`)
-        const aiConversations = statsResponse.data?.ai_conversations || 0
+      const statsResponse = await apiClient.get(`users/${userId}/stats`)
+      const aiConversations = statsResponse.data?.ai_conversations || 0
       
       // Buscar conquistas reais da tabela badges
-        const achievementsResponse = await apiClient.get(`/gamification/users/${userId}/achievements?status=unlocked`)
-        const achievements = achievementsResponse.data?.length || 0
+      const achievementsResponse = await apiClient.get(`gamification/users/${userId}/achievements`)
+      const achievements = (Array.isArray(achievementsResponse?.data) ? achievementsResponse.data.length : (achievementsResponse?.data?.length || 0))
       
-      // Buscar posição no ranking usando a rota correta
+      // Buscar posição no ranking usando a rota correta de gamificação
       let userPosition = 0
       try {
-        const rankingResponse = await apiClient.get('/users/ranking')
-        userPosition = rankingResponse?.data?.user_position || 0
+        const rankingResponse = await apiClient.get(`gamification/users/${userId}/ranking?type=points&period=all_time`)
+        userPosition = rankingResponse?.data?.position || rankingResponse?.data?.user_position || 0
       } catch (rankingError) {
         console.log('Erro ao buscar ranking:', rankingError)
       }
@@ -117,7 +106,7 @@ const Overview = () => {
         const weekAgo = new Date()
         weekAgo.setDate(weekAgo.getDate() - 7)
         
-        const transactionsResponse = await apiClient.get(`/gamification/users/${userId}/points/transactions?since=${weekAgo.toISOString()}`)
+        const transactionsResponse = await apiClient.get(`gamification/users/${userId}/points/transactions?since=${weekAgo.toISOString()}`)
         // A API retorna um array diretamente
         const transactions = Array.isArray(transactionsResponse) ? transactionsResponse : (transactionsResponse?.data || [])
         weeklyPoints = transactions.reduce((sum, transaction) => sum + (transaction.amount || 0), 0)
@@ -125,18 +114,18 @@ const Overview = () => {
       } catch (transactionError) {
         console.log('Erro ao buscar transações semanais, usando estimativa:', transactionError)
         // Fallback: estimar pontos semanais como 30% dos pontos totais
-        weeklyPoints = Math.floor((gamificationResponse?.points || 0) * 0.3)
+        weeklyPoints = Math.floor((gamificationStats?.points || 0) * 0.3)
       }
       
       setStats({
-          totalCheckins: statsResponse.data?.checkins || 0,
-          chatMessages: aiConversations,
-          rankingPosition: userPosition,
-          achievementsUnlocked: achievements,
-          weeklyPoints: weeklyPoints,
-          monthlyGoal: 500 // Valor padrão, será atualizado pelo useEffect com dados reais
-        })
-       
+        totalCheckins: statsResponse.data?.checkins || gamificationStats?.checkins || 0,
+        chatMessages: aiConversations,
+        rankingPosition: userPosition,
+        achievementsUnlocked: achievements,
+        weeklyPoints: weeklyPoints,
+        monthlyGoal: 500 // Valor padrão, será atualizado pelo useEffect com dados reais
+      })
+      
     } catch (error) {
       console.error('Erro ao carregar estatísticas:', error)
       // Definir valores padrão em caso de erro
@@ -157,7 +146,7 @@ const Overview = () => {
     try {
       setLoadingSurveys(true)
       
-      const response = await apiClient.get('/surveys?status=active&limit=3')
+      const response = await apiClient.get('surveys?status=active&limit=3')
       if (response.success && response.data) {
         setSurveys(response.data.data || [])
       }
@@ -197,7 +186,7 @@ const Overview = () => {
       {/* Welcome Section */}
       <div className="bg-gradient-to-r from-primary-600 to-progressive-600 rounded-lg p-6 text-white">
         <h2 className="text-2xl font-bold mb-2">
-          Bem-vindo, {userProfile?.username || 'Patriota'}!
+          Bem-vindo, {userProfile?.username || 'Progressista'}!
         </h2>
         <p className="text-primary-100">
           Continue engajado no movimento. Você está fazendo a diferença!
@@ -267,10 +256,10 @@ const Overview = () => {
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
                 className="bg-primary-600 h-2 rounded-full" 
-                style={{ width: `${((userPoints.weeklyPoints || 0) / (stats.weeklyGoal || 200)) * 100}%` }}
+                style={{ width: `${((userPoints.weeklyPoints || 0) / (userGoals?.weeklyGoal || 200)) * 100}%` }}
               />
             </div>
-            <p className="text-xs text-gray-500">Meta semanal: {stats.weeklyGoal || 200} pontos</p>
+            <p className="text-xs text-gray-500">Meta semanal: {userGoals?.weeklyGoal || 200} pontos</p>
           </div>
         </div>
 
@@ -408,7 +397,7 @@ const Overview = () => {
           </div>
         </Link>
 
-        <Link to="/dashboard/direitagpt" className="card hover:shadow-lg transition-shadow duration-200 text-left block">
+        <Link to="/dashboard/esquerdagpt" className="card hover:shadow-lg transition-shadow duration-200 text-left block">
           <div className="flex items-center space-x-3">
             <MessageCircle className="h-8 w-8 text-blue-600" />
             <div>

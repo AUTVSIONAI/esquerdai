@@ -24,6 +24,7 @@ import LiveMapService from '../../../services/liveMap'
 import { apiClient } from '../../../lib/api.ts'
 import { useAuth } from '../../../hooks/useAuth'
 import RSVPButton from '../../common/RSVPButton'
+import EventsService from '../../../services/events'
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
 
@@ -123,27 +124,137 @@ const UnifiedLiveMap = () => {
   }, [])
 
   const loadMapData = async () => {
+    setLoading(true)
+    setError(null)
     try {
-      setLoading(true)
-      setError(null)
-
-      const [usersResponse, eventsResponse, checkinsResponse, statsResponse, manifestationsResponse, userCheckinsResponse] = await Promise.all([
-        apiClient.get('/users/online'),
-        apiClient.get('/events/active'),
-        apiClient.get('/checkins/recent'),
-        apiClient.get('/admin/city-stats'),
+      const results = await Promise.allSettled([
+        apiClient.get('/admin/live-map/users'),
+        apiClient.get('/admin/live-map/events'),
+        apiClient.get('/admin/live-map/stats'),
         apiClient.get('/manifestations'),
-        apiClient.get('/manifestations/checkins/map')
+        apiClient.get('/manifestations/checkins/map'),
+        apiClient.get('/checkins/map')
       ])
 
-      setOnlineUsers(Array.isArray(usersResponse.data) ? usersResponse.data : [])
-      setActiveEvents(Array.isArray(eventsResponse.data) ? eventsResponse.data : [])
-      setCheckins(Array.isArray(checkinsResponse.data) ? checkinsResponse.data : [])
-      setCityStats(Array.isArray(statsResponse.data) ? statsResponse.data : [])
-      setManifestations(Array.isArray(manifestationsResponse.data?.data) ? manifestationsResponse.data.data : [])
-      setUserCheckins(Array.isArray(userCheckinsResponse.data?.data) ? userCheckinsResponse.data.data : [])
+      const [usersRes, eventsRes, statsRes, manifestationsRes, userCheckinsRes, checkinsMapRes] = results
+
+      if (usersRes.status === 'fulfilled') {
+        const rawUsers = Array.isArray(usersRes.value?.data?.users)
+          ? usersRes.value.data.users
+          : (Array.isArray(usersRes.value?.data) ? usersRes.value.data : [])
+        setOnlineUsers((rawUsers || []).map(u => ({
+          ...u,
+          latitude: u.latitude ?? u.location?.lat ?? null,
+          longitude: u.longitude ?? u.location?.lng ?? null
+        })))
+      } else {
+        // Fallback: usar /admin/users (ou /users/ranking) para preencher lista
+        try {
+          const alt = await apiClient.get('/admin/users?limit=50')
+          const rawAlt = Array.isArray(alt?.data?.data)
+            ? alt.data.data
+            : (Array.isArray(alt?.data?.users)
+              ? alt.data.users
+              : (Array.isArray(alt?.data) ? alt.data : []))
+
+          const normalized = (rawAlt || []).map((u, idx) => ({
+            id: u.id ?? u.user_id ?? `${idx + 1}`,
+            username: u.username ?? (u.full_name ? u.full_name.split(' ')[0].toLowerCase() : `user${idx + 1}`),
+            location: {
+              city: u.city ?? u.location?.city ?? '—',
+              state: u.state ?? u.location?.state ?? '—',
+              lat: u.latitude ?? u.location?.lat ?? null,
+              lng: u.longitude ?? u.location?.lng ?? null
+            },
+            status: u.status ?? 'online',
+            lastActivity: u.last_login ?? u.created_at ?? null,
+            plan: u.plan ?? (u.points && u.points > 0 ? 'engajado' : 'gratuito'),
+            latitude: u.latitude ?? u.location?.lat ?? null,
+            longitude: u.longitude ?? u.location?.lng ?? null
+          }))
+          setOnlineUsers(normalized)
+        } catch (e) {
+          try {
+            const rank = await apiClient.get('/users/ranking')
+            const rawRank = Array.isArray(rank?.data?.data) ? rank.data.data : (Array.isArray(rank?.data) ? rank.data : [])
+            const normalizedRank = (rawRank || []).map((u, idx) => ({
+              id: u.id ?? `${idx + 1}`,
+              username: u.username ?? `user${idx + 1}`,
+              location: { city: u.city ?? '—', state: u.state ?? '—', lat: null, lng: null },
+              status: 'online',
+              lastActivity: null,
+              plan: u.plan ?? (u.points && u.points > 0 ? 'engajado' : 'gratuito'),
+              latitude: null,
+              longitude: null
+            }))
+            setOnlineUsers(normalizedRank)
+          } catch (e2) {
+            console.warn('Fallback de usuários falhou:', e2)
+            setOnlineUsers([])
+          }
+        }
+      }
+
+      if (eventsRes.status === 'fulfilled') {
+        const rawEvents = Array.isArray(eventsRes.value?.data?.events)
+          ? eventsRes.value.data.events
+          : (Array.isArray(eventsRes.value?.data) ? eventsRes.value.data : [])
+        setActiveEvents((rawEvents || []).map(e => ({
+          ...e,
+          latitude: e.latitude ?? e.location?.lat ?? null,
+          longitude: e.longitude ?? e.location?.lng ?? null
+        })))
+      } else {
+        // Fallback: usar EventsService.getEvents com status 'active'
+        try {
+          const { events } = await EventsService.getEvents({ status: 'active' }, 1, 20)
+          const mapped = (events || []).map(e => ({
+            ...e,
+            latitude: e.latitude ?? e.location?.lat ?? null,
+            longitude: e.longitude ?? e.location?.lng ?? null
+          }))
+          setActiveEvents(mapped)
+        } catch (e) {
+          console.warn('Fallback de eventos falhou:', e)
+          setActiveEvents([])
+        }
+      }
+
+      if (statsRes.status === 'fulfilled') {
+        const statsArray = Array.isArray(statsRes.value?.data?.stats)
+          ? statsRes.value.data.stats
+          : (Array.isArray(statsRes.value?.data) ? statsRes.value.data : [])
+        setCityStats(statsArray || [])
+      } else {
+        setCityStats([])
+      }
+
+      if (manifestationsRes.status === 'fulfilled') {
+        const manArr = Array.isArray(manifestationsRes.value?.data?.data)
+          ? manifestationsRes.value.data.data
+          : (Array.isArray(manifestationsRes.value?.data) ? manifestationsRes.value.data : [])
+        setManifestations(manArr || [])
+      }
+
+      if (userCheckinsRes.status === 'fulfilled') {
+        const checkinsArr = Array.isArray(userCheckinsRes.value?.data?.data)
+          ? userCheckinsRes.value.data.data
+          : (Array.isArray(userCheckinsRes.value?.data) ? userCheckinsRes.value.data : [])
+        setUserCheckins(checkinsArr || [])
+      } else if (checkinsMapRes.status === 'fulfilled') {
+        // Fallback para clusters agregados de /api/checkins/map
+        const clusterArr = Array.isArray(checkinsMapRes.value?.data?.data)
+          ? checkinsMapRes.value.data.data
+          : (Array.isArray(checkinsMapRes.value?.data) ? checkinsMapRes.value.data : [])
+        setUserCheckins(clusterArr || [])
+      }
+
       setLastRefresh(new Date())
 
+      const failed = results.filter(r => r.status === 'rejected')
+      if (failed.length > 0) {
+        setError(`Alguns dados não carregaram (${failed.length} falha${failed.length > 1 ? 's' : ''}).`)
+      }
     } catch (err) {
       console.error('Erro ao carregar dados do mapa:', err)
       setError('Erro ao carregar dados do mapa')
@@ -172,7 +283,14 @@ const UnifiedLiveMap = () => {
         setUserCheckins(Array.isArray(response.data) ? response.data : [])
       }
     } catch (error) {
-      console.error('Erro ao buscar check-ins de usuários:', error)
+      // Fallback para /api/checkins/map
+      try {
+        const response2 = await apiClient.get('/checkins/map')
+        const arr2 = Array.isArray(response2?.data?.data) ? response2.data.data : []
+        setUserCheckins(arr2)
+      } catch (error2) {
+        console.error('Erro ao buscar check-ins de usuários:', error2)
+      }
     }
   }
 
@@ -182,46 +300,54 @@ const UnifiedLiveMap = () => {
 
     if (heatmapConfig.includeUsers) {
       onlineUsers.forEach(user => {
-        points.push({
-          latitude: user.latitude,
-          longitude: user.longitude,
-          weight: heatmapConfig.weights.users
-        })
+        if (user.latitude != null && user.longitude != null) {
+          points.push({
+            latitude: user.latitude,
+            longitude: user.longitude,
+            weight: heatmapConfig.weights.users
+          })
+        }
       })
     }
 
     if (heatmapConfig.includeEvents) {
       activeEvents.forEach(event => {
-        points.push({
-          latitude: event.latitude,
-          longitude: event.longitude,
-          weight: heatmapConfig.weights.events
-        })
+        if (event.latitude != null && event.longitude != null) {
+          points.push({
+            latitude: event.latitude,
+            longitude: event.longitude,
+            weight: heatmapConfig.weights.events
+          })
+        }
       })
     }
 
     if (heatmapConfig.includeCheckins) {
-      checkins.forEach(checkin => {
-        points.push({
-          latitude: checkin.latitude,
-          longitude: checkin.longitude,
-          weight: heatmapConfig.weights.checkins
-        })
+      userCheckins.forEach(checkin => {
+        if (checkin.latitude != null && checkin.longitude != null) {
+          points.push({
+            latitude: checkin.latitude,
+            longitude: checkin.longitude,
+            weight: (checkin.count ?? heatmapConfig.weights.checkins)
+          })
+        }
       })
     }
 
     if (heatmapConfig.includeManifestations) {
       manifestations.forEach(manifestation => {
-        points.push({
-          latitude: manifestation.latitude,
-          longitude: manifestation.longitude,
-          weight: heatmapConfig.weights.manifestations
-        })
+        if (manifestation.latitude != null && manifestation.longitude != null) {
+          points.push({
+            latitude: manifestation.latitude,
+            longitude: manifestation.longitude,
+            weight: heatmapConfig.weights.manifestations
+          })
+        }
       })
     }
 
     setHeatmapData(points)
-  }, [onlineUsers, activeEvents, checkins, manifestations, heatmapConfig])
+  }, [onlineUsers, activeEvents, userCheckins, manifestations, heatmapConfig])
 
   useEffect(() => {
     generateHeatmapData()

@@ -37,7 +37,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { path: '/pesquisas', icon: BarChart3, label: 'Pesquisas EsquerdaJá' },
     { path: '/resultados', icon: TrendingUp, label: 'Resultados' },
     { path: '/verdade-ou-fake', icon: Shield, label: 'Verdade ou Fake' },
-    { path: '/dashboard/direitagpt', icon: MessageCircle, label: 'EsquerdaIA Unificada' },
+    { path: '/dashboard/esquerdagpt', icon: MessageCircle, label: 'EsquerdaIA Unificada' },
     { path: '/dashboard/agents', icon: Bot, label: 'Chat com Agentes' },
     { path: '/dashboard/checkin', icon: MapPin, label: 'Check-in' },
     { path: '/dashboard/events', icon: Map, label: 'Mapa de Eventos' },

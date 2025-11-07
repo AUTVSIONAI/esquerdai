@@ -19,17 +19,17 @@ const Ranking = () => {
   const mockRankings = {
     city: {
       week: [
-        { id: 1, username: 'PatriotaSP', points: 850, checkins: 12, city: 'São Paulo', avatar: null },
+        { id: 1, username: 'ProgressistaSP', points: 850, checkins: 12, city: 'São Paulo', avatar: null },
         { id: 2, username: 'DefensorBR', points: 720, checkins: 10, city: 'São Paulo', avatar: null },
-        { id: 3, username: 'ConservadorSP', points: 680, checkins: 9, city: 'São Paulo', avatar: null },
+        { id: 3, username: 'ProgressistaSP', points: 680, checkins: 9, city: 'São Paulo', avatar: null },
         { id: 4, username: 'LiberdadeSP', points: 620, checkins: 8, city: 'São Paulo', avatar: null },
         { id: 5, username: 'TradicionalSP', points: 580, checkins: 7, city: 'São Paulo', avatar: null },
         { id: 6, username: userProfile?.username || 'Você', points: userProfile?.points || 450, checkins: 6, city: 'São Paulo', avatar: null, isCurrentUser: true },
       ],
       month: [
-        { id: 1, username: 'PatriotaSP', points: 2850, checkins: 42, city: 'São Paulo', avatar: null },
+        { id: 1, username: 'ProgressistaSP', points: 2850, checkins: 42, city: 'São Paulo', avatar: null },
         { id: 2, username: 'DefensorBR', points: 2420, checkins: 38, city: 'São Paulo', avatar: null },
-        { id: 3, username: 'ConservadorSP', points: 2180, checkins: 35, city: 'São Paulo', avatar: null },
+        { id: 3, username: 'ProgressistaSP', points: 2180, checkins: 35, city: 'São Paulo', avatar: null },
         { id: 4, username: 'LiberdadeSP', points: 1920, checkins: 32, city: 'São Paulo', avatar: null },
         { id: 5, username: 'TradicionalSP', points: 1780, checkins: 29, city: 'São Paulo', avatar: null },
         { id: 6, username: userProfile?.username || 'Você', points: userProfile?.points || 1450, checkins: 26, city: 'São Paulo', avatar: null, isCurrentUser: true },
@@ -37,17 +37,17 @@ const Ranking = () => {
     },
     state: {
       week: [
-        { id: 1, username: 'PatriotaSP', points: 850, checkins: 12, city: 'São Paulo', avatar: null },
+        { id: 1, username: 'ProgressistaSP', points: 850, checkins: 12, city: 'São Paulo', avatar: null },
         { id: 2, username: 'DefensorRJ', points: 780, checkins: 11, city: 'Rio de Janeiro', avatar: null },
-        { id: 3, username: 'ConservadorBH', points: 720, checkins: 10, city: 'Belo Horizonte', avatar: null },
+        { id: 3, username: 'ProgressistaBH', points: 720, checkins: 10, city: 'Belo Horizonte', avatar: null },
         { id: 4, username: 'LiberdadeSP', points: 680, checkins: 9, city: 'São Paulo', avatar: null },
         { id: 5, username: 'TradicionalSP', points: 620, checkins: 8, city: 'São Paulo', avatar: null },
         { id: 23, username: userProfile?.username || 'Você', points: userProfile?.points || 450, checkins: 6, city: 'São Paulo', avatar: null, isCurrentUser: true },
       ],
       month: [
-        { id: 1, username: 'PatriotaSP', points: 3850, checkins: 52, city: 'São Paulo', avatar: null },
+        { id: 1, username: 'ProgressistaSP', points: 3850, checkins: 52, city: 'São Paulo', avatar: null },
         { id: 2, username: 'DefensorRJ', points: 3420, checkins: 48, city: 'Rio de Janeiro', avatar: null },
-        { id: 3, username: 'ConservadorBH', points: 3180, checkins: 45, city: 'Belo Horizonte', avatar: null },
+        { id: 3, username: 'ProgressistaBH', points: 3180, checkins: 45, city: 'Belo Horizonte', avatar: null },
         { id: 4, username: 'LiberdadeSP', points: 2920, checkins: 42, city: 'São Paulo', avatar: null },
         { id: 5, username: 'TradicionalSP', points: 2780, checkins: 39, city: 'São Paulo', avatar: null },
         { id: 23, username: userProfile?.username || 'Você', points: userProfile?.points || 1450, checkins: 26, city: 'São Paulo', avatar: null, isCurrentUser: true },
@@ -55,17 +55,17 @@ const Ranking = () => {
     },
     country: {
       week: [
-        { id: 1, username: 'PatriotaSP', points: 850, checkins: 12, city: 'São Paulo', avatar: null },
+        { id: 1, username: 'ProgressistaSP', points: 850, checkins: 12, city: 'São Paulo', avatar: null },
         { id: 2, username: 'DefensorRJ', points: 820, checkins: 11, city: 'Rio de Janeiro', avatar: null },
-        { id: 3, username: 'ConservadorRS', points: 780, checkins: 11, city: 'Porto Alegre', avatar: null },
+        { id: 3, username: 'ProgressistaRS', points: 780, checkins: 11, city: 'Porto Alegre', avatar: null },
         { id: 4, username: 'LiberdadeDF', points: 750, checkins: 10, city: 'Brasília', avatar: null },
         { id: 5, username: 'TradicionalMG', points: 720, checkins: 10, city: 'Belo Horizonte', avatar: null },
         { id: 156, username: userProfile?.username || 'Você', points: userProfile?.points || 450, checkins: 6, city: 'São Paulo', avatar: null, isCurrentUser: true },
       ],
       month: [
-        { id: 1, username: 'PatriotaSP', points: 4850, checkins: 62, city: 'São Paulo', avatar: null },
+        { id: 1, username: 'ProgressistaSP', points: 4850, checkins: 62, city: 'São Paulo', avatar: null },
         { id: 2, username: 'DefensorRJ', points: 4420, checkins: 58, city: 'Rio de Janeiro', avatar: null },
-        { id: 3, username: 'ConservadorRS', points: 4180, checkins: 55, city: 'Porto Alegre', avatar: null },
+        { id: 3, username: 'ProgressistaRS', points: 4180, checkins: 55, city: 'Porto Alegre', avatar: null },
         { id: 4, username: 'LiberdadeDF', points: 3920, checkins: 52, city: 'Brasília', avatar: null },
         { id: 5, username: 'TradicionalMG', points: 3780, checkins: 49, city: 'Belo Horizonte', avatar: null },
         { id: 156, username: userProfile?.username || 'Você', points: userProfile?.points || 1450, checkins: 26, city: 'São Paulo', avatar: null, isCurrentUser: true },
@@ -196,8 +196,8 @@ const Ranking = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Ranking de Patriotas</h2>
-          <p className="text-gray-600">Veja sua posição entre os conservadores mais ativos</p>
+          <h2 className="text-2xl font-bold text-gray-900">Ranking de Progressistas</h2>
+          <p className="text-gray-600">Veja sua posição entre os progressistas mais ativos</p>
         </div>
         <Trophy className="h-8 w-8 text-yellow-500" />
       </div>
@@ -279,7 +279,7 @@ const Ranking = () => {
       {/* Top Rankings */}
       <div className="card">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Top Patriotas - {getScopeLabel(selectedScope)} ({getPeriodLabel(selectedPeriod)})
+          Top Progressistas - {getScopeLabel(selectedScope)} ({getPeriodLabel(selectedPeriod)})
         </h3>
         
         <div className="space-y-3">
@@ -378,7 +378,7 @@ const Ranking = () => {
             Fazer Check-in
           </button>
           <button 
-            onClick={() => navigate('/dashboard/direitagpt')}
+            onClick={() => navigate('/dashboard/esquerdagpt')}
             className="border border-white text-white px-4 py-2 rounded-lg font-medium hover:bg-white hover:text-primary-600 transition-colors"
           >
             Conversar com IA

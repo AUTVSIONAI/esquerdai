@@ -70,8 +70,29 @@ const PoliticianProfile = () => {
       setRatingsLoading(true);
       const response = await apiClient.get(`/politicians/${id}/ratings?page=${ratingsPage}&sort=${ratingsSort}`);
       if (response.data.success) {
-        setRatings(response.data.data);
-        setRatingStats(response.data.stats);
+        const ratingsData = response.data.data || [];
+        const serverStats = response.data.stats || {};
+
+        // Compute distribution on client as a robust fallback
+        const computeDistribution = (list) => {
+          const dist = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+          (list || []).forEach((r) => {
+            const val = Number(r.rating);
+            if (val >= 1 && val <= 5) dist[val]++;
+          });
+          const total = (list || []).length;
+          const avg = total > 0 ? (list.reduce((sum, r) => sum + Number(r.rating || 0), 0) / total) : 0;
+          return { total, distribution: dist, average_rating: Math.round(avg * 100) / 100 };
+        };
+
+        const clientStats = computeDistribution(ratingsData);
+
+        setRatings(ratingsData);
+        setRatingStats({
+          total: serverStats.total ?? clientStats.total,
+          distribution: serverStats.distribution ?? clientStats.distribution,
+          average_rating: serverStats.average_rating ?? clientStats.average_rating
+        });
         setRatingsPagination(response.data.pagination);
       }
     } catch (error) {
@@ -83,12 +104,7 @@ const PoliticianProfile = () => {
 
   const fetchUserRating = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) return;
-
-      const response = await apiClient.get(`/politicians/${id}/user-rating`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await apiClient.get(`/politicians/${id}/user-rating`);
       if (response.data.success) {
         setUserRating(response.data.data);
       }
@@ -102,14 +118,10 @@ const PoliticianProfile = () => {
 
     try {
       setSubmittingRating(true);
-      const token = localStorage.getItem('token');
-      
       const method = userRating ? 'put' : 'post';
       const response = await apiClient[method](`/politicians/${id}/ratings`, {
         rating: newRating,
         comment: newComment
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
       });
 
       if (response.data.success) {
@@ -131,10 +143,7 @@ const PoliticianProfile = () => {
     if (!user || !userRating) return;
 
     try {
-      const token = localStorage.getItem('token');
-      await apiClient.delete(`/politicians/${id}/ratings`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await apiClient.delete(`/politicians/${id}/ratings`);
       
       setUserRating(null);
       fetchRatings();
@@ -181,7 +190,7 @@ const PoliticianProfile = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-progressive-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Carregando perfil...</p>
         </div>
       </div>
@@ -193,7 +202,7 @@ const PoliticianProfile = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Político não encontrado</h2>
-          <Link to="/politicos" className="text-green-600 hover:text-green-700">
+          <Link to="/politicos" className="text-progressive-600 hover:text-progressive-700">
             Voltar para o diretório
           </Link>
         </div>
@@ -217,7 +226,7 @@ const PoliticianProfile = () => {
             <span className="text-gray-300">|</span>
             <Link 
               to="/politicos" 
-              className="inline-flex items-center gap-2 text-green-600 hover:text-green-700"
+              className="inline-flex items-center gap-2 text-progressive-600 hover:text-progressive-700"
             >
               <ArrowLeft className="w-5 h-5" />
               Voltar para o Diretório
@@ -305,7 +314,7 @@ const PoliticianProfile = () => {
                       <div className="flex gap-2">
                         <button
                           onClick={openRatingModal}
-                          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                          className="px-4 py-2 bg-progressive-600 text-white rounded-lg hover:bg-progressive-700 transition-colors"
                         >
                           {userRating ? 'Editar Avaliação' : 'Avaliar'}
                         </button>
@@ -361,7 +370,7 @@ const PoliticianProfile = () => {
                 <select
                   value={ratingsSort}
                   onChange={(e) => setRatingsSort(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500"
                 >
                   <option value="recent">Mais Recentes</option>
                   <option value="rating_high">Maior Avaliação</option>
@@ -371,7 +380,7 @@ const PoliticianProfile = () => {
 
               {ratingsLoading ? (
                 <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-4"></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-progressive-600 mx-auto mb-4"></div>
                   <p className="text-gray-600">Carregando avaliações...</p>
                 </div>
               ) : ratings.length === 0 ? (
@@ -381,7 +390,7 @@ const PoliticianProfile = () => {
                   {user && (
                     <button
                       onClick={openRatingModal}
-                      className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                      className="mt-4 px-4 py-2 bg-progressive-600 text-white rounded-lg hover:bg-progressive-700 transition-colors"
                     >
                       Seja o primeiro a avaliar
                     </button>
@@ -396,13 +405,13 @@ const PoliticianProfile = () => {
                           {rating.users?.avatar_url ? (
                             <img
                               src={rating.users.avatar_url}
-                              alt={rating.users.full_name}
+                              alt={rating.users?.full_name || rating.users?.username || (rating.users?.email ? rating.users.email.split('@')[0] : 'Usuário')}
                               className="w-10 h-10 rounded-full object-cover"
                             />
                           ) : (
                             <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
                               <span className="text-gray-600 font-semibold">
-                                {rating.users?.full_name?.charAt(0) || '?'}
+                                {(rating.users?.full_name || rating.users?.username || (rating.users?.email ? rating.users.email.split('@')[0] : 'Usuário')).charAt(0)}
                               </span>
                             </div>
                           )}
@@ -411,7 +420,7 @@ const PoliticianProfile = () => {
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
                             <span className="font-semibold text-gray-900">
-                              {rating.users?.full_name || 'Usuário'}
+                              {rating.users?.full_name || rating.users?.username || (rating.users?.email ? rating.users.email.split('@')[0] : 'Usuário')}
                             </span>
                             <div className="flex items-center">
                               {[1, 2, 3, 4, 5].map((star) => (
@@ -447,7 +456,7 @@ const PoliticianProfile = () => {
                           onClick={() => setRatingsPage(page)}
                           className={`px-3 py-2 rounded-lg ${
                             page === ratingsPage
-                              ? 'bg-green-600 text-white'
+                              ? 'bg-progressive-600 text-white'
                               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                           }`}
                         >
@@ -546,7 +555,7 @@ const PoliticianProfile = () => {
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Compartilhe sua opinião sobre este político..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                 rows={4}
               />
             </div>
@@ -561,7 +570,7 @@ const PoliticianProfile = () => {
               <button
                 onClick={submitRating}
                 disabled={newRating === 0 || submittingRating}
-                className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-2 bg-progressive-600 text-white rounded-lg hover:bg-progressive-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submittingRating ? 'Enviando...' : (userRating ? 'Atualizar' : 'Enviar')}
               </button>

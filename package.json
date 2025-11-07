@@ -1,28 +1,30 @@
 {
-  "name": "direitaai-frontend",
+  "name": "esquerdai-frontend",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Frontend da plataforma DireitaAI - Conectando conservadores através de eventos, IA e comunidade",
-  "author": "Equipe DireitaAI",
+  "description": "Frontend da plataforma EsquerdaAI - Conectando progressistas através de eventos, IA e comunidade",
+  "author": "Equipe EsquerdaAI",
   "license": "MIT",
-  "homepage": "https://direitaai.com",
+  "homepage": "https://esquerdai.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AUTVSIONAI/DIREITAI.git"
+    "url": "https://github.com/AUTVSIONAI/ESQUERDAI.git"
   },
   "bugs": {
-    "url": "https://github.com/AUTVSIONAI/DIREITAI/issues"
+    "url": "https://github.com/AUTVSIONAI/ESQUERDAI/issues"
   },
   "keywords": [
     "react",
     "typescript",
     "vite",
     "tailwindcss",
-    "conservative",
-    "events",
-    "ai",
-    "community"
+    "progressista",
+    "esquerda",
+    "politica",
+    "eventos",
+    "ia",
+    "comunidade"
   ],
   "scripts": {
     "dev": "vite",

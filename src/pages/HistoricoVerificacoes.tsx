@@ -123,7 +123,7 @@ const HistoricoVerificacoes: React.FC = () => {
   const getResultIcon = (resultado: string) => {
     switch (resultado) {
       case 'verdade':
-        return <CheckCircle className="w-5 h-5 text-green-600" />
+        return <CheckCircle className="w-5 h-5 text-success-600" />
       case 'tendencioso':
         return <AlertTriangle className="w-5 h-5 text-yellow-600" />
       case 'fake':
@@ -144,7 +144,7 @@ const HistoricoVerificacoes: React.FC = () => {
 
   const getResultColor = (resultado: string) => {
     switch (resultado) {
-      case 'verdade': return 'bg-green-50 border-green-200 text-green-800'
+      case 'verdade': return 'bg-success-50 border-success-200 text-success-800'
       case 'tendencioso': return 'bg-yellow-50 border-yellow-200 text-yellow-800'
       case 'fake': return 'bg-red-50 border-red-200 text-red-800'
       default: return 'bg-gray-50 border-gray-200 text-gray-800'

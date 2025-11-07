@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Plus, Edit, Trash2, Search, Filter, UserCheck, Upload, Image } from 'lucide-react'
+import { Plus, Edit, Trash2, Search, Filter, UserCheck, Upload, Image, Key } from 'lucide-react'
 import { apiClient } from '../../../lib/api'
 import { politiciansService } from '../../../services'
 import { getPoliticianPhotoUrl } from '../../../utils/imageUtils'
@@ -11,7 +11,13 @@ const PoliticiansManagement = () => {
   const [filterParty, setFilterParty] = useState('')
   const [showAddModal, setShowAddModal] = useState(false)
   const [editingPolitician, setEditingPolitician] = useState(null)
-
+  const [showAccessModal, setShowAccessModal] = useState(false)
+  const [accessPolitician, setAccessPolitician] = useState(null)
+  const [accessEmail, setAccessEmail] = useState('')
+  const [accessInvite, setAccessInvite] = useState(false)
+  const [accessCreateUser, setAccessCreateUser] = useState(false)
+  const [accessSubmitting, setAccessSubmitting] = useState(false)
+  const [accessResult, setAccessResult] = useState(null)
   const [formData, setFormData] = useState({
     name: '',
     party: '',
@@ -141,6 +147,42 @@ const PoliticiansManagement = () => {
     setPhotoPreview('')
     setEditingPolitician(null)
     setShowAddModal(false)
+  }
+
+  const openAccessModal = (politician) => {
+    setAccessPolitician(politician)
+    setAccessEmail(politician.email || '')
+    setAccessInvite(false)
+    setAccessCreateUser(false)
+    setAccessResult(null)
+    setShowAccessModal(true)
+  }
+
+  const closeAccessModal = () => {
+    setShowAccessModal(false)
+    setAccessPolitician(null)
+    setAccessEmail('')
+    setAccessInvite(false)
+    setAccessCreateUser(false)
+    setAccessSubmitting(false)
+    setAccessResult(null)
+  }
+
+  const handleAccessSubmit = async (e) => {
+    e.preventDefault()
+    if (!accessPolitician) return
+    try {
+      setAccessSubmitting(true)
+      const payload = { email: accessEmail, invite: accessInvite, createUser: accessCreateUser }
+      const resp = await apiClient.post(`/admin/politicians/${accessPolitician.id}/access`, payload)
+      setAccessResult(resp.data)
+      setPoliticians(prev => prev.map(p => p.id === accessPolitician.id ? { ...p, email: accessEmail } : p))
+    } catch (error) {
+      console.error('Erro ao atualizar acesso do político:', error)
+      alert(error?.response?.data?.error || 'Erro ao atualizar acesso')
+    } finally {
+      setAccessSubmitting(false)
+    }
   }
 
   const startEdit = (politician) => {
@@ -286,6 +328,12 @@ const PoliticiansManagement = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-2">
+                      <button
+                        onClick={() => openAccessModal(politician)}
+                        className="text-green-600 hover:text-green-900"
+                      >
+                        <Key className="h-4 w-4" />
+                      </button>
                       <button
                         onClick={() => startEdit(politician)}
                         className="text-blue-600 hover:text-blue-900"
@@ -457,6 +505,71 @@ const PoliticiansManagement = () => {
                   >
                     {uploadingPhoto && <Upload className="w-4 h-4 animate-spin" />}
                     {uploadingPhoto ? 'Enviando...' : (editingPolitician ? 'Atualizar' : 'Adicionar')}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Access Modal */}
+      {showAccessModal && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-[28rem] shadow-lg rounded-md bg-white">
+            <div className="mt-3">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Gerenciar acesso do político
+              </h3>
+              <form onSubmit={handleAccessSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Email do usuário</label>
+                  <input
+                    type="email"
+                    required
+                    value={accessEmail}
+                    onChange={(e) => setAccessEmail(e.target.value)}
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+                <div className="flex items-center gap-3">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={accessInvite}
+                      onChange={(e) => setAccessInvite(e.target.checked)}
+                    />
+                    <span className="text-sm text-gray-700">Enviar convite por email</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={accessCreateUser}
+                      onChange={(e) => setAccessCreateUser(e.target.checked)}
+                    />
+                    <span className="text-sm text-gray-700">Criar usuário se não existir</span>
+                  </label>
+                </div>
+                {accessResult && (
+                  <div className="text-sm text-gray-700 bg-gray-100 rounded p-2">
+                    {accessResult.message || 'Acesso atualizado.'}
+                  </div>
+                )}
+                <div className="flex justify-end space-x-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={closeAccessModal}
+                    className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                    disabled={accessSubmitting}
+                  >
+                    Fechar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={accessSubmitting}
+                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {accessSubmitting ? 'Salvando...' : 'Salvar'}
                   </button>
                 </div>
               </form>

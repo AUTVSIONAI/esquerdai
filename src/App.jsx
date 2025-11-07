@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import AuthProvider from './contexts/AuthProvider'
 import HomePage from './pages/HomePage'
 import Login from './components/auth/Login'
+import Logout from './components/auth/Logout'
 import UserDashboard from './components/user/UserDashboard'
 import AdminDashboard from './components/admin/AdminDashboard'
 import ProtectedRoute from './components/auth/ProtectedRoute'
@@ -13,12 +14,14 @@ import BlogPost from './pages/BlogPost'
 import Politicians from './pages/Politicians'
 import PoliticianProfile from './pages/PoliticianProfile'
 import PoliticianRegistration from './pages/PoliticianRegistration'
+import PoliticianRanking from './pages/PoliticianRanking'
 import AgentChat from './pages/AgentChat'
 import Surveys from './pages/Surveys'
 import SurveyResults from './pages/SurveyResults'
 import SurveyDetail from './pages/SurveyDetail'
 import VerdadeOuFake from './pages/VerdadeOuFake'
 import ConstitutionQuiz from './components/user/ConstitutionQuiz'
+import PoliticianAgentSettings from './pages/PoliticianAgentSettings'
 
 function App() {
   return (
@@ -36,6 +39,8 @@ function App() {
             
             {/* Rota de login */}
             <Route path="/login" element={<Login />} />
+            {/* Rota de logout */}
+            <Route path="/logout" element={<Logout />} />
             
             {/* Rotas do usuário */}
             <Route 
@@ -63,12 +68,14 @@ function App() {
             <Route path="/politicos" element={<PublicRoute requireAuth={true}><Politicians /></PublicRoute>} />
             <Route path="/politicos/:id" element={<PoliticianProfile />} />
             <Route path="/cadastro-politico" element={<PoliticianRegistration />} />
+            <Route path="/politicos/ranking" element={<PublicRoute requireAuth={true}><PoliticianRanking /></PublicRoute>} />
             <Route path="/agente/:politicianId" element={<AgentChat />} />
             
             {/* Rotas de Pesquisas */}
             <Route path="/pesquisas" element={<PublicRoute requireAuth={true}><Surveys /></PublicRoute>} />
             <Route path="/resultados" element={<PublicRoute requireAuth={true}><SurveyResults /></PublicRoute>} />
             <Route path="/pesquisa/:id" element={<SurveyDetail />} />
+            <Route path="/me/politico" element={<PublicRoute requireAuth={true}><PoliticianAgentSettings /></PublicRoute>} />
             
             {/* Rota Verdade ou Fake */}
             <Route path="/verdade-ou-fake" element={<PublicRoute requireAuth={true}><VerdadeOuFake /></PublicRoute>} />

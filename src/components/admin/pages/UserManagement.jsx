@@ -33,6 +33,86 @@ const UserManagement = () => {
   const [showEditModal, setShowEditModal] = useState(false)
   const [editingUser, setEditingUser] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
+  const [stats, setStats] = useState({ total: 0, active: 0, premium: 0, banned: 0 })
+  const [isCreatingNewUser, setIsCreatingNewUser] = useState(false)
+  const [modalFeedback, setModalFeedback] = useState(null)
+
+  // Admin access management state
+  const [adminPermissions, setAdminPermissions] = useState([])
+  const [adminForm, setAdminForm] = useState({
+    hasAdmin: false,
+    isAdminEnabled: false,
+    role: 'support',
+    department: '',
+    permissions: [],
+    loadingAdminMeta: false,
+    userType: 'cidadao',
+  })
+
+  const handleAdminFormChange = (field, value) => setAdminForm(prev => ({ ...prev, [field]: value }))
+
+  const toggleAdminPermission = (permId) => {
+    setAdminForm(prev => {
+      const next = new Set(prev.permissions || [])
+      if (next.has(permId)) next.delete(permId)
+      else next.add(permId)
+      return { ...prev, permissions: Array.from(next) }
+    })
+  }
+
+  const ROLE_MAPPING = {
+    politico: 'politico',
+    partido: 'partido',
+    jornalista: 'jornalista',
+    cidadao: null,
+  }
+
+  const TYPE_DESCRIPTIONS = {
+    politico: 'Acessa dados de interação do público, avaliações, sugestões e pode editar o prompt do agente.',
+    partido: 'Acompanha desempenho dos políticos do partido, eventos e análises agregadas.',
+    jornalista: 'Consulta e modera conteúdo, acessa análises e material para pautas.',
+    cidadao: 'Acesso padrão sem privilégios administrativos.',
+  }
+
+  const buildPermissionsForType = (type, allPerms) => {
+    const perms = Array.isArray(allPerms) ? allPerms : []
+    const pick = (predicate) => perms.filter(predicate).map(p => p.id || p.name).filter(Boolean)
+    switch (type) {
+      case 'politico': {
+        const analyticsRead = pick(p => p.resource === 'analytics' && (p.action === 'read'))
+        const aiManage = pick(p => p.resource === 'ai' && (p.action === 'manage' || p.action === 'update'))
+        const usersRead = pick(p => p.resource === 'users' && (p.action === 'read'))
+        return Array.from(new Set([...analyticsRead, ...aiManage, ...usersRead]))
+      }
+      case 'partido': {
+        const analyticsRead = pick(p => p.resource === 'analytics' && (p.action === 'read'))
+        const eventsManage = pick(p => p.resource === 'events' && (['manage','create','update'].includes(p.action)))
+        const contentManage = pick(p => p.resource === 'content' && (p.action === 'manage'))
+        return Array.from(new Set([...analyticsRead, ...eventsManage, ...contentManage]))
+      }
+      case 'jornalista': {
+        const contentModerate = pick(p => p.resource === 'content' && (p.action === 'moderate' || p.action === 'read'))
+        const analyticsRead = pick(p => p.resource === 'analytics' && (p.action === 'read'))
+        return Array.from(new Set([...contentModerate, ...analyticsRead]))
+      }
+      default:
+        return []
+    }
+  }
+
+  const handleUserTypeChange = (type) => {
+    const resolvedType = type || 'cidadao'
+    const mappedRole = ROLE_MAPPING[resolvedType]
+    const enabled = resolvedType !== 'cidadao'
+    const autoPerms = enabled ? buildPermissionsForType(resolvedType, adminPermissions) : []
+    setAdminForm(prev => ({
+      ...prev,
+      userType: resolvedType,
+      isAdminEnabled: enabled,
+      role: mappedRole || prev.role || 'politico',
+      permissions: autoPerms
+    }))
+  }
 
   // Função para carregar usuários
   const loadUsers = async () => {
@@ -46,7 +126,10 @@ const UserManagement = () => {
       if (searchTerm) filters.search = searchTerm;
       
       const response = await AdminService.getUsers(filters);
-      setUsers(response.users || []);
+      const list = Array.isArray(response) ? response : (response?.users ?? response?.data?.users ?? []);
+      const normalized = Array.isArray(list) ? list : [];
+      setUsers(normalized);
+      return normalized;
     } catch (err) {
       setError('Erro ao carregar usuários');
       console.error('Erro ao carregar usuários:', err);
@@ -55,19 +138,92 @@ const UserManagement = () => {
     }
   };
 
-  // Carregar usuários ao montar o componente
+  // Função para carregar estatísticas reais (com fallback local)
+  const loadStats = async (listParam) => {
+    try {
+      const ds = await AdminService.getDashboardStats();
+      const u = ds?.users || {};
+      const baseUsers = Array.isArray(listParam) ? listParam : users;
+      const activeCount = u.active_month ?? u.active_week ?? u.active_today ?? baseUsers.filter(x => x.status === 'active').length;
+      const premiumCount = (u.by_plan && typeof u.by_plan === 'object') ? (u.by_plan.premium ?? 0) : baseUsers.filter(x => x.plan === 'premium').length;
+      const bannedCount = baseUsers.filter(x => x.status === 'banned').length;
+      const totalCount = u.total ?? baseUsers.length;
+      setStats({ total: totalCount, active: activeCount, premium: premiumCount, banned: bannedCount });
+    } catch (err) {
+      const baseUsers = Array.isArray(listParam) ? listParam : users;
+      setStats({
+        total: baseUsers.length,
+        active: baseUsers.filter(u => u.status === 'active').length,
+        premium: baseUsers.filter(u => u.plan === 'premium').length,
+        banned: baseUsers.filter(u => u.status === 'banned').length
+      })
+    }
+  }
+
+  // Carregar usuários ao montar e, em seguida, estatísticas
   useEffect(() => {
-    loadUsers();
+    (async () => {
+      const list = await loadUsers();
+      await loadStats(list);
+    })();
   }, []);
 
   // Recarregar quando filtros mudarem
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      loadUsers();
+    const timeoutId = setTimeout(async () => {
+      const list = await loadUsers();
+      await loadStats(list);
     }, 500); // Debounce de 500ms
     
     return () => clearTimeout(timeoutId);
   }, [selectedPlan, selectedStatus, searchTerm]);
+
+  // Carregar permissões e dados admin ao abrir modal de edição
+  useEffect(() => {
+    if (showEditModal && editingUser?.id) {
+      (async () => {
+        setAdminForm(p => ({ ...p, loadingAdminMeta: true }));
+        try {
+          const [permsRes, adminRes] = await Promise.allSettled([
+            AdminService.getPermissions(),
+            AdminService.getAdminUser(editingUser.id),
+          ]);
+
+          if (permsRes.status === 'fulfilled' && Array.isArray(permsRes.value)) {
+            setAdminPermissions(permsRes.value);
+          } else {
+            setAdminPermissions([]);
+          }
+
+          if (adminRes.status === 'fulfilled' && adminRes.value) {
+            const a = adminRes.value;
+            handleAdminFormChange('hasAdmin', true);
+            handleAdminFormChange('isAdminEnabled', a?.is_active !== false);
+            const mappedType = a?.role === 'moderator' ? 'jornalista' : a?.role === 'admin' ? 'partido' : a?.role === 'support' ? 'politico' : a?.role || 'cidadao';
+            handleAdminFormChange('userType', mappedType);
+            handleAdminFormChange('role', a?.role || 'politico');
+            handleAdminFormChange('department', a?.department || '');
+            const perms = Array.isArray(a?.permissions)
+              ? a.permissions.map(p => (typeof p === 'string' ? p : p?.id)).filter(Boolean)
+              : [];
+            handleAdminFormChange('permissions', perms);
+          } else {
+            handleAdminFormChange('hasAdmin', false);
+            handleAdminFormChange('isAdminEnabled', false);
+            handleAdminFormChange('userType', 'cidadao');
+            handleAdminFormChange('role', 'support');
+            handleAdminFormChange('department', '');
+            handleAdminFormChange('permissions', []);
+          }
+        } catch (e) {
+          handleAdminFormChange('hasAdmin', false);
+          handleAdminFormChange('isAdminEnabled', false);
+        } finally {
+          setAdminForm(p => ({ ...p, loadingAdminMeta: false }));
+        }
+      })();
+    }
+  }, [showEditModal, editingUser?.id]);
 
 
 
@@ -104,6 +260,37 @@ const UserManagement = () => {
     setShowUserModal(true)
   }
 
+  const handleCreateNewUser = async () => {
+    setIsCreatingNewUser(true)
+    setModalFeedback(null)
+    setEditingUser({
+      id: null,
+      full_name: '',
+      username: '',
+      email: '',
+      plan: 'gratuito',
+      city: '',
+      state: ''
+    })
+    setAdminForm({
+      hasAdmin: false,
+      isAdminEnabled: false,
+      role: 'support',
+      department: '',
+      permissions: [],
+      loadingAdminMeta: true,
+      userType: 'cidadao',
+    })
+    setShowEditModal(true)
+    try {
+      const perms = await AdminService.getPermissions().catch(() => [])
+      setAdminPermissions(Array.isArray(perms) ? perms : [])
+    } finally {
+      setAdminForm((p) => ({ ...p, loadingAdminMeta: false }))
+      setIsCreatingNewUser(false)
+    }
+  }
+
   const handleEditUser = (user) => {
     setEditingUser({
       id: user.id,
@@ -128,26 +315,92 @@ const UserManagement = () => {
 
     try {
       setIsUpdating(true)
-      
-      // Chamar o backend para atualizar o usuário
-      await AdminService.updateUser(editingUser.id, {
-        full_name: editingUser.full_name,
-        username: editingUser.username,
-        email: editingUser.email,
-        city: editingUser.city,
-        state: editingUser.state,
-        plan: editingUser.plan
-      })
+
+      let targetUserId = editingUser.id
+      const isNew = !editingUser.id
+      const shouldEnableAdmin = adminForm.isAdminEnabled && adminForm.userType !== 'cidadao'
+
+      if (targetUserId) {
+        await AdminService.updateUser(editingUser.id, {
+          full_name: editingUser.full_name,
+          username: editingUser.username,
+          email: editingUser.email,
+          city: editingUser.city,
+          state: editingUser.state,
+          plan: editingUser.plan
+        })
+      } else {
+        // Criação de novo usuário, incluindo metadados administrativos se habilitado
+        const payload = {
+          full_name: editingUser.full_name,
+          username: editingUser.username || undefined,
+          email: editingUser.email,
+          city: editingUser.city || undefined,
+          state: editingUser.state || undefined,
+          plan: editingUser.plan || 'gratuito'
+        }
+        if (shouldEnableAdmin) {
+          Object.assign(payload, {
+            role: adminForm.role,
+            department: adminForm.department || undefined,
+            permissions: adminForm.permissions || [],
+            is_active: true,
+          })
+        }
+        const created = await AdminService.createUser(payload)
+        targetUserId = created?.id || created?.user?.id || created?.data?.id
+        if (!targetUserId) {
+          try {
+            const found = await AdminService.getUsers({ search: editingUser.email, limit: 1 })
+            const list = Array.isArray(found) ? found : (found?.users ?? found?.data?.users ?? [])
+            if (Array.isArray(list) && list.length > 0) {
+              targetUserId = list[0].id
+            }
+          } catch {}
+        }
+      }
+
+      // Aplicar acesso administrativo apenas para usuários existentes
+      // Para novos usuários, já aplicamos na criação quando habilitado
+      try {
+        if (!isNew) {
+          if (shouldEnableAdmin && targetUserId) {
+            if (adminForm.hasAdmin) {
+              await AdminService.updateAdminUser(targetUserId, {
+                role: adminForm.role,
+                department: adminForm.department || undefined,
+                permissions: adminForm.permissions || [],
+                is_active: true,
+              })
+            } else {
+              await AdminService.createAdminUser({
+                user_id: targetUserId,
+                role: adminForm.role,
+                department: adminForm.department || undefined,
+                permissions: adminForm.permissions || [],
+              })
+            }
+          } else if (adminForm.hasAdmin && targetUserId) {
+            await AdminService.updateAdminUser(targetUserId, { is_active: false })
+          }
+        }
+      } catch (adminErr) {
+        console.error('Erro ao aplicar acesso admin:', adminErr)
+      }
       
       // Atualizar a lista de usuários
       await loadUsers()
       
-      setShowEditModal(false)
-      setEditingUser(null)
-      alert('Usuário atualizado com sucesso!')
+      setModalFeedback({ type: 'success', message: editingUser.id ? 'Usuário atualizado com sucesso!' : 'Usuário criado com sucesso!' })
+      // Fecha modal após pequeno delay para o usuário ver o feedback
+      setTimeout(() => {
+        setShowEditModal(false)
+        setEditingUser(null)
+        setModalFeedback(null)
+      }, 800)
     } catch (err) {
-      console.error('Erro ao atualizar usuário:', err)
-      alert('Erro ao atualizar usuário')
+      console.error('Erro ao salvar usuário:', err)
+      setModalFeedback({ type: 'error', message: 'Erro ao salvar usuário. Tente novamente.' })
     } finally {
       setIsUpdating(false)
     }
@@ -221,9 +474,13 @@ const UserManagement = () => {
             <Download className="h-4 w-4 mr-2" />
             Exportar
           </button>
-          <button className="btn-primary flex items-center">
-            <Plus className="h-4 w-4 mr-2" />
-            Novo Usuário
+          <button className="btn-primary flex items-center" onClick={handleCreateNewUser} disabled={isCreatingNewUser}>
+            {isCreatingNewUser ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Plus className="h-4 w-4 mr-2" />
+            )}
+            {isCreatingNewUser ? 'Abrindo...' : 'Novo Usuário'}
           </button>
         </div>
       </div>
@@ -234,7 +491,7 @@ const UserManagement = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total de Usuários</p>
-              <p className="text-2xl font-bold text-gray-900">{users.length}</p>
+              <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
             </div>
             <User className="h-8 w-8 text-blue-500" />
           </div>
@@ -244,7 +501,7 @@ const UserManagement = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Usuários Ativos</p>
               <p className="text-2xl font-bold text-gray-900">
-                {users.filter(u => u.status === 'active').length}
+                {stats.active}
               </p>
             </div>
             <Shield className="h-8 w-8 text-green-500" />
@@ -255,7 +512,7 @@ const UserManagement = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Usuários Premium</p>
               <p className="text-2xl font-bold text-gray-900">
-                {users.filter(u => u.plan === 'premium').length}
+                {stats.premium}
               </p>
             </div>
             <Crown className="h-8 w-8 text-yellow-500" />
@@ -266,7 +523,7 @@ const UserManagement = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Usuários Banidos</p>
               <p className="text-2xl font-bold text-gray-900">
-                {users.filter(u => u.status === 'banned').length}
+                {stats.banned}
               </p>
             </div>
             <Ban className="h-8 w-8 text-red-500" />
@@ -562,7 +819,7 @@ const UserManagement = () => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Editar Usuário</h3>
+              <h3 className="text-lg font-semibold text-gray-900">{editingUser?.id ? 'Editar Usuário' : 'Novo Usuário'}</h3>
               <button
                 onClick={() => {
                   setShowEditModal(false)
@@ -573,6 +830,12 @@ const UserManagement = () => {
                 ×
               </button>
             </div>
+
+            {modalFeedback && (
+              <div className={`mb-4 p-3 rounded-md border ${modalFeedback.type === 'error' ? 'border-red-300 bg-red-50 text-red-700' : 'border-green-300 bg-green-50 text-green-700'}`}>
+                {modalFeedback.message}
+              </div>
+            )}
             
             <form onSubmit={handleUpdateUser} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -647,6 +910,98 @@ const UserManagement = () => {
                   <option value="engajado">Engajado</option>
                   <option value="premium">Premium</option>
                 </select>
+              </div>
+
+              {/* Admin Access Section */}
+              <div className="mt-6 border-t pt-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-900">Acesso Administrativo</h4>
+                    <p className="text-xs text-gray-500">Conceda ou ajuste acesso administrativo para este usuário.</p>
+                  </div>
+                  <label className="inline-flex items-center gap-2">
+                    <span className="text-sm">Ativo</span>
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4"
+                      checked={!!adminForm.isAdminEnabled}
+                      onChange={(e) => handleAdminFormChange('isAdminEnabled', e.target.checked)}
+                    />
+                  </label>
+                </div>
+
+                <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Tipo de Usuário</label>
+                    <select
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
+                      value={adminForm.userType}
+                      onChange={(e) => handleUserTypeChange(e.target.value)}
+                    >
+                      <option value="cidadao">Cidadão comum</option>
+                      <option value="politico">Político</option>
+                      <option value="partido">Partido Político</option>
+                      <option value="jornalista">Jornalista</option>
+                    </select>
+                    <p className="mt-1 text-xs text-gray-500">{TYPE_DESCRIPTIONS[adminForm.userType]}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Papel administrativo (interno)</label>
+                    <select
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
+                      disabled={true}
+                      value={adminForm.role}
+                      onChange={(e) => handleAdminFormChange('role', e.target.value)}
+                    >
+                      <option value="super_admin">Super Admin</option>
+                      <option value="admin">Admin</option>
+                      <option value="moderator">Moderador</option>
+                      <option value="support">Suporte</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Departamento (opcional)</label>
+                    <input
+                      type="text"
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-progressive-500 focus:border-progressive-500"
+                      disabled={!adminForm.isAdminEnabled}
+                      value={adminForm.department}
+                      onChange={(e) => handleAdminFormChange('department', e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-4">
+                  <label className="block text-sm font-medium text-gray-700">Permissões</label>
+                  <div className="mt-2 max-h-48 overflow-auto border rounded-md p-2">
+                    {adminForm.loadingAdminMeta ? (
+                      <div className="py-6 text-center text-sm text-gray-500">Carregando permissões…</div>
+                    ) : adminPermissions.length === 0 ? (
+                      <div className="py-6 text-center text-sm text-gray-500">Nenhuma permissão disponível.</div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        {adminPermissions.map((perm) => (
+                          <label key={perm.id || perm.name} className="flex items-start gap-2 p-1 rounded hover:bg-gray-50">
+                            <input
+                              type="checkbox"
+                              className="mt-1"
+                              disabled={!adminForm.isAdminEnabled}
+                              checked={adminForm.permissions?.includes(perm.id || perm.name)}
+                              onChange={() => toggleAdminPermission(perm.id || perm.name)}
+                            />
+                            <span>
+                              <span className="block text-sm font-medium">{perm.name}</span>
+                              {perm.description && <span className="block text-xs text-gray-500">{perm.description}</span>}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
               
               <div className="mt-6 flex justify-end space-x-3">

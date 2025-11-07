@@ -98,8 +98,8 @@ const PoliticianApproval = () => {
 
   const commonParties = [
     'PL', 'PP', 'REPUBLICANOS', 'UNIÃO', 'PSD', 'MDB', 'PSDB',
-    'PODEMOS', 'PDT', 'PSB', 'SOLIDARIEDADE', 'NOVO', 'PATRIOTA',
-    'PROS', 'AVANTE', 'PMN', 'CIDADANIA', 'PV', 'REDE', 'PSL'
+    'PODEMOS', 'PDT', 'PSB', 'SOLIDARIEDADE', 'NOVO', 'PSOL',
+    'PT', 'PROS', 'AVANTE', 'PMN', 'CIDADANIA', 'PV', 'REDE', 'PSL'
   ];
 
   const handleAction = async (politician, action) => {
@@ -154,7 +154,7 @@ const PoliticianApproval = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'approved': return 'bg-green-100 text-green-800';
+      case 'approved': return 'bg-success-100 text-success-800';
       case 'rejected': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
@@ -188,12 +188,12 @@ const PoliticianApproval = () => {
           </div>
         </div>
         
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+        <div className="bg-success-50 border border-success-200 rounded-lg p-4">
           <div className="flex items-center">
-            <Check className="w-8 h-8 text-green-600 mr-3" />
+            <Check className="w-8 h-8 text-success-600 mr-3" />
             <div>
-              <p className="text-sm font-medium text-green-800">Aprovados</p>
-              <p className="text-2xl font-bold text-green-900">{stats.approved}</p>
+              <p className="text-sm font-medium text-success-800">Aprovados</p>
+              <p className="text-2xl font-bold text-success-900">{stats.approved}</p>
             </div>
           </div>
         </div>
@@ -237,7 +237,7 @@ const PoliticianApproval = () => {
                 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors duration-200
                 ${
                   selectedTab === tab.key
-                    ? 'border-green-500 text-green-600'
+                    ? 'border-progressive-500 text-progressive-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }
               `}
@@ -281,7 +281,7 @@ const PoliticianApproval = () => {
                     placeholder="Nome do político..."
                     value={filters.search}
                     onChange={(e) => handleFilterChange('search', e.target.value)}
-                    className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                   />
                 </div>
               </div>
@@ -294,7 +294,7 @@ const PoliticianApproval = () => {
                 <select
                   value={filters.party}
                   onChange={(e) => handleFilterChange('party', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                 >
                   <option value="">Todos os partidos</option>
                   {commonParties.map(party => (
@@ -311,7 +311,7 @@ const PoliticianApproval = () => {
                 <select
                   value={filters.state}
                   onChange={(e) => handleFilterChange('state', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                 >
                   <option value="">Todos os estados</option>
                   {brazilianStates.map(state => (
@@ -328,7 +328,7 @@ const PoliticianApproval = () => {
                 <select
                   value={filters.position}
                   onChange={(e) => handleFilterChange('position', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                 >
                   <option value="">Todos os cargos</option>
                   <option value="senador">Senador</option>
@@ -401,7 +401,7 @@ const PoliticianApproval = () => {
       {/* Lista de Políticos */}
       {loading ? (
         <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-progressive-600"></div>
           <span className="ml-3 text-gray-600">Carregando políticos...</span>
         </div>
       ) : politicians.length === 0 ? (
@@ -483,9 +483,9 @@ const PoliticianApproval = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        getStatusColor(politician.approval_status)
+                        getStatusColor(politician.status)
                       }`}>
-                        {getStatusText(politician.approval_status)}
+                        {getStatusText(politician.status)}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -496,11 +496,11 @@ const PoliticianApproval = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-2">
-                        {politician.approval_status === 'pending' && (
+                        {politician.status === 'pending' && (
                           <>
                             <button
                               onClick={() => handleAction(politician, 'approve')}
-                              className="text-green-600 hover:text-green-900 flex items-center"
+                              className="text-success-600 hover:text-success-900 flex items-center"
                             >
                               <Check className="w-4 h-4 mr-1" />
                               Aprovar
@@ -567,7 +567,7 @@ const PoliticianApproval = () => {
                         onClick={() => setCurrentPage(page)}
                         className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
                           page === currentPage
-                            ? 'z-10 bg-green-50 border-green-500 text-green-600'
+                            ? 'z-10 bg-success-50 border-success-500 text-success-600'
                             : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                         }`}
                       >
@@ -635,7 +635,7 @@ const PoliticianApproval = () => {
                   <textarea
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                     rows={3}
                     placeholder="Adicione um comentário sobre a aprovação..."
                   />
@@ -674,7 +674,7 @@ const PoliticianApproval = () => {
                     disabled={processing || (actionType === 'reject' && !reason.trim())}
                     className={`px-4 py-2 rounded-md text-white font-medium disabled:opacity-50 ${
                       actionType === 'approve'
-                        ? 'bg-green-600 hover:bg-green-700'
+                        ? 'bg-success-600 hover:bg-success-700'
                         : 'bg-red-600 hover:bg-red-700'
                     }`}
                   >

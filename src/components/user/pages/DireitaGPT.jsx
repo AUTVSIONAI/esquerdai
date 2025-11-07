@@ -5,7 +5,7 @@ import { AIService } from '../../../services/ai'
 import { apiClient } from '../../../lib/api'
 import VoiceControls from '../VoiceControls'
 
-const DireitaGPT = () => {
+const EsquerdaGPT = () => {
   const { userProfile } = useAuth()
   const [messages, setMessages] = useState([])
   const [inputMessage, setInputMessage] = useState('')
@@ -110,7 +110,7 @@ const DireitaGPT = () => {
         type: 'bot',
         content: 'Desculpe, houve um erro ao carregar o histórico. Vamos começar uma nova conversa!',
         timestamp: new Date(),
-        model: 'Patriota IA'
+        model: 'EsquerdaIA'
       }])
     } finally {
       setIsLoading(false)
@@ -156,11 +156,11 @@ const DireitaGPT = () => {
           type: 'bot',
           content: data.response,
           timestamp: new Date(),
-          model: data.model || 'Patriota IA'
+          model: data.model || 'EsquerdaIA'
         }
         
         conversationId.current = data.conversation_id
-        setCurrentModel('Patriota IA')
+        setCurrentModel('EsquerdaIA')
         setIsConnected(true)
         setLastBotMessage(data.response)
         
@@ -171,20 +171,20 @@ const DireitaGPT = () => {
       } catch (backendError) {
         console.warn('Backend não disponível, usando respostas locais:', backendError)
         
-        // Fallback para respostas locais conservadoras
-        const conservativeResponses = {
-          economia: 'A economia brasileira precisa de mais liberdade econômica e menos intervenção estatal. O livre mercado é fundamental para o crescimento sustentável.',
-          família: 'A família é a base da sociedade e deve ser protegida. Os valores tradicionais são fundamentais para uma sociedade próspera.',
-          educação: 'A educação deve focar nos valores cívicos e no patriotismo, ensinando às crianças o amor pela pátria e pelos valores cristãos.',
-          segurança: 'A segurança pública é prioridade. Precisamos apoiar nossas forças policiais e o combate efetivo à criminalidade.',
-          valores: 'Os valores cristãos e conservadores são fundamentais para a construção de uma sociedade justa e próspera.',
-          default: 'Como conservador, acredito na importância de preservarmos nossos valores tradicionais, a família brasileira e a soberania nacional.'
+        // Fallback para respostas locais progressistas
+        const progressiveResponses = {
+          economia: 'Uma economia justa e sustentável valoriza inclusão, direitos trabalhistas, combate à desigualdade e investimento em serviços públicos de qualidade.',
+          família: 'Defendemos famílias diversas e políticas de cuidado que garantem dignidade, igualdade de gênero e proteção social para todos.',
+          educação: 'Educação pública, gratuita, laica e de qualidade, com foco em ciência, pensamento crítico e respeito à diversidade.',
+          segurança: 'Segurança com prevenção, inteligência, direitos humanos e políticas sociais que reduzem a violência estrutural.',
+          valores: 'Valores democráticos, direitos humanos, justiça social, pluralidade e sustentabilidade orientam nossas propostas.',
+          default: 'Como progressista, defendo democracia, justiça social, sustentabilidade, igualdade de oportunidades e direitos humanos para todos.'
         }
         
         const lowerMessage = messageToSend.toLowerCase()
-        let responseContent = conservativeResponses.default
+        let responseContent = progressiveResponses.default
         
-        for (const [key, response] of Object.entries(conservativeResponses)) {
+        for (const [key, response] of Object.entries(progressiveResponses)) {
           if (key !== 'default' && lowerMessage.includes(key)) {
             responseContent = response
             break
@@ -239,7 +239,7 @@ const DireitaGPT = () => {
       type: 'bot',
       content: 'Conversa limpa! Como posso ajudá-lo agora?',
       timestamp: new Date(),
-      model: 'Patriota IA'
+      model: 'EsquerdaIA'
     }])
     conversationId.current = null
   }
@@ -257,7 +257,7 @@ const DireitaGPT = () => {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `conversa-patriotaia-${new Date().toISOString().split('T')[0]}.txt`
+    a.download = `conversa-esquerdaia-${new Date().toISOString().split('T')[0]}.txt`
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -434,4 +434,4 @@ const DireitaGPT = () => {
   )
 }
 
-export default DireitaGPT
+export default EsquerdaGPT

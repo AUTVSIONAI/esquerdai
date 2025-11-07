@@ -3,7 +3,6 @@ import { useAuth } from './useAuth'
 import { GamificationService } from '../services/gamification'
 import { GoalsService } from '../services/goals'
 import { apiClient } from '../lib/api'
-import { supabase } from '../lib/supabase'
 
 export const useGamification = () => {
   console.log('🎮 useGamification - Hook inicializado')
@@ -32,40 +31,18 @@ export const useGamification = () => {
   const [isInitialized, setIsInitialized] = useState(false)
   const [resolvedUserId, setResolvedUserId] = useState(null)
 
-  // Função para obter o user_id correto da tabela public.users
+  // Função para obter o user_id via backend (evita RLS recursiva)
   const getUserId = async () => {
-    // Cache para evitar chamadas repetidas ao Supabase
-    if (resolvedUserId) {
-      return resolvedUserId
-    }
-    
-    console.log('🔍 getUserId - userProfile:', userProfile)
-    if (!userProfile?.id) {
-      console.log('❌ getUserId - userProfile.id não encontrado')
-      return null
-    }
-    
+    if (resolvedUserId) return resolvedUserId
+    if (!userProfile?.id) return null
     try {
-      console.log('🔍 getUserId - Buscando user_id para auth_id:', userProfile.id)
-      const { data: user, error } = await supabase
-        .from('users')
-        .select('id')
-        .eq('auth_id', userProfile.id)
-        .single()
-      
-      if (error) {
-        console.error('❌ Erro ao buscar user_id:', error)
-        console.log('🔄 getUserId - Usando fallback para auth_id:', userProfile.id)
-        setResolvedUserId(userProfile.id)
-        return userProfile.id
-      }
-      
-      console.log('✅ getUserId - user_id encontrado:', user.id, 'para auth_id:', userProfile.id)
-      setResolvedUserId(user.id)
-      return user.id
+      const res = await apiClient.get('users/profile')
+      const id = res?.data?.id || res?.data?.userId || res?.data?.data?.id
+      const finalId = id || userProfile.id
+      setResolvedUserId(finalId)
+      return finalId
     } catch (error) {
-      console.error('❌ Erro ao resolver user_id:', error)
-      console.log('🔄 getUserId - Usando fallback para auth_id:', userProfile.id)
+      console.error('❌ Erro ao resolver user_id via backend:', error)
       setResolvedUserId(userProfile.id)
       return userProfile.id
     }
@@ -96,7 +73,7 @@ export const useGamification = () => {
       console.log('🚀 fetchUserPoints - ANTES da requisição para /points')
       try {
         console.log('🚀 fetchUserPoints - Executando apiClient.get...')
-        const pointsResponse = await apiClient.get(`/gamification/users/${userId}/points`)
+        const pointsResponse = await apiClient.get(`gamification/users/${userId}/points`)
         console.log('📊 fetchUserPoints - Resposta completa:', pointsResponse)
         console.log('📊 fetchUserPoints - Resposta.data:', pointsResponse.data)
         
@@ -123,13 +100,14 @@ export const useGamification = () => {
       console.log('🚀 fetchUserPoints - DEPOIS da requisição para /points')
 
       // Buscar estatísticas do usuário
-      const statsResponse = await apiClient.get(`/gamification/users/${userId}/stats`)
+      const statsResponse = await apiClient.get(`gamification/users/${userId}/stats`)
       
       if (statsResponse) {
+        const statsData = statsResponse.data || statsResponse
         setUserStats({
-          badges: statsResponse.badges || 0,
-          checkins: statsResponse.checkins || 0,
-          conversations: statsResponse.conversations || 0
+          badges: statsData?.badges || 0,
+          checkins: statsData?.checkins || 0,
+          conversations: statsData?.conversations || 0
         })
       }
 
@@ -138,7 +116,7 @@ export const useGamification = () => {
         const weekAgo = new Date()
         weekAgo.setDate(weekAgo.getDate() - 7)
         
-        const transactionsResponse = await apiClient.get(`/gamification/users/${userId}/points/transactions?since=${weekAgo.toISOString()}`)
+        const transactionsResponse = await apiClient.get(`gamification/users/${userId}/points/transactions?since=${weekAgo.toISOString()}`)
         // A API retorna um array diretamente
         const transactions = Array.isArray(transactionsResponse) ? transactionsResponse : (transactionsResponse?.data || [])
         const weeklyPoints = transactions.reduce((sum, transaction) => sum + (transaction.amount || 0), 0)
@@ -180,7 +158,7 @@ export const useGamification = () => {
       if (!userId) return
       
       // Buscar atividades recentes
-      const activitiesResponse = await apiClient.get(`/gamification/users/${userId}/activities?limit=10`)
+      const activitiesResponse = await apiClient.get(`gamification/users/${userId}/activities?limit=10`)
       console.log('🎯 Resposta completa das atividades:', activitiesResponse)
       console.log('🎯 Dados das atividades:', activitiesResponse?.data)
       console.log('🎯 Tipo da resposta:', typeof activitiesResponse)

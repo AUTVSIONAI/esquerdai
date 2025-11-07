@@ -40,13 +40,13 @@ const HomePage = () => {
     {
       icon: UserCheck,
       title: 'Diretório de Políticos',
-      description: 'Conheça os políticos conservadores e de direita do Brasil',
+      description: 'Conheça os políticos progressistas e de esquerda do Brasil',
       link: '/politicos'
     },
     {
       icon: Bot,
       title: 'Agentes IA por Político',
-      description: 'Converse com IAs que representam políticos conservadores',
+      description: 'Converse com IAs que representam políticos progressistas',
       link: '/politicos'
     },
     {
@@ -64,7 +64,7 @@ const HomePage = () => {
     {
       icon: Calendar,
       title: 'Eventos Progressistas',
-      description: 'Encontre e participe de eventos conservadores em todo o Brasil'
+      description: 'Encontre e participe de eventos progressistas em todo o Brasil'
     },
     {
       icon: Users,
@@ -77,7 +77,7 @@ const HomePage = () => {
     {
       name: 'Carlos Silva',
       role: 'Empresário',
-      content: 'Finalmente uma plataforma que representa nossos valores conservadores!',
+      content: 'Finalmente uma plataforma que representa nossos valores progressistas!',
       rating: 5
     },
     {
@@ -244,7 +244,7 @@ const HomePage = () => {
               Recursos Exclusivos
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Ferramentas poderosas para fortalecer o movimento conservador brasileiro
+              Ferramentas poderosas para fortalecer o movimento progressista brasileiro
             </p>
           </div>
           
@@ -253,7 +253,7 @@ const HomePage = () => {
               const Icon = feature.icon;
               const gradients = [
                 "from-blue-500 to-blue-600",
-                "from-green-500 to-green-600", 
+                "from-progressive-500 to-progressive-600", 
                 "from-purple-500 to-purple-600",
                 "from-orange-500 to-orange-600",
                 "from-red-500 to-red-600",
@@ -379,7 +379,7 @@ const HomePage = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center space-x-3 mb-6">
-                <div className="bg-gradient-to-br from-conservative-500 to-conservative-600 p-2 rounded-xl">
+                <div className="bg-gradient-to-br from-progressive-500 to-progressive-600 p-2 rounded-xl">
                   <Flag className="h-6 w-6 text-white" />
                 </div>
                 <span className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">

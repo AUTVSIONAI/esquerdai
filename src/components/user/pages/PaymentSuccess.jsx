@@ -39,7 +39,7 @@ const PaymentSuccess = () => {
       case 'premium':
         return <Crown className="h-16 w-16 text-purple-600" />
       default:
-        return <CheckCircle className="h-16 w-16 text-green-600" />
+        return <CheckCircle className="h-16 w-16 text-success-600" />
     }
   }
 
@@ -50,7 +50,7 @@ const PaymentSuccess = () => {
       case 'premium':
         return 'from-purple-500 to-purple-600'
       default:
-        return 'from-green-500 to-green-600'
+        return 'from-success-500 to-success-600'
     }
   }
   
@@ -94,8 +94,8 @@ const PaymentSuccess = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header de Sucesso */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6">
-            <CheckCircle className="h-12 w-12 text-green-600" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-success-100 rounded-full mb-6">
+            <CheckCircle className="h-12 w-12 text-success-600" />
           </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Pagamento Realizado com Sucesso!
@@ -134,7 +134,7 @@ const PaymentSuccess = () => {
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Status:</span>
-                      <span className="font-medium text-green-600 capitalize">
+                      <span className="font-medium text-success-600 capitalize">
                         {subscription.status || 'Ativa'}
                       </span>
                     </div>
@@ -164,7 +164,7 @@ const PaymentSuccess = () => {
                   <div className="space-y-3">
                     {getPlanBenefits(subscription.plan).map((benefit, index) => (
                       <div key={index} className="flex items-start gap-3">
-                        <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <CheckCircle className="h-5 w-5 text-success-500 mt-0.5 flex-shrink-0" />
                         <span className="text-gray-700">{benefit}</span>
                       </div>
                     ))}
@@ -206,14 +206,14 @@ const PaymentSuccess = () => {
             </div>
             
             <div className="text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-4">
-                <span className="text-xl font-bold text-green-600">3</span>
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-success-100 rounded-full mb-4">
+                <span className="text-xl font-bold text-success-600">3</span>
               </div>
               <h4 className="font-semibold text-gray-900 mb-2">
                 Participe de Eventos
               </h4>
               <p className="text-gray-600 text-sm">
-                Conecte-se com outros membros da comunidade conservadora
+               Conecte-se com outros membros da comunidade progressista
               </p>
             </div>
           </div>
@@ -230,7 +230,7 @@ const PaymentSuccess = () => {
           </button>
           
           <button
-            onClick={() => navigate('/dashboard/direitagpt')}
+            onClick={() => navigate('/dashboard/esquerdagpt')}
             className="flex items-center justify-center gap-2 px-8 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
           >
             Explorar IA Criativa

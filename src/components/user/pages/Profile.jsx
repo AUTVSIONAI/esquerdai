@@ -1,8 +1,19 @@
 import React, { useState, useRef } from 'react'
 import { User, Edit3, Save, X, Camera, MapPin, Calendar, Mail, Phone, Shield, Award, TrendingUp, Upload } from 'lucide-react'
 import { useAuth } from '../../../hooks/useAuth'
-import { apiRequest } from '../../../utils/apiClient'
+import { apiClient } from '../../../lib/api'
 import { supabase } from '../../../lib/supabase'
+
+// Helper para normalizar URL pública do Supabase Storage
+const normalizeAvatarUrl = (url) => {
+  try {
+    if (!url) return null;
+    // Não forçar caminho público; manter URL original
+    return url;
+  } catch (e) {
+    return url;
+  }
+};
 
 const Profile = () => {
   const { userProfile, user, refreshUserProfile } = useAuth()
@@ -31,8 +42,61 @@ const Profile = () => {
       })
     }
   }, [userProfile])
+  // Adiciona estado para src resolvida do avatar (pública ou assinada)
+  const [avatarSrc, setAvatarSrc] = useState(null)
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef(null)
+
+  // Resolve URL de avatar: público, assinado para bucket privado ou externo
+  React.useEffect(() => {
+    const url = userProfile?.avatar_url;
+    let cancelled = false;
+
+    async function resolve() {
+      try {
+        if (!url) {
+          setAvatarSrc(null);
+          return;
+        }
+        // Se não for URL do Storage, usar como está
+        if (!url.includes('/storage/v1/object/')) {
+          setAvatarSrc(url);
+          return;
+        }
+        // Se já for pública, usar como está
+        if (url.includes('/storage/v1/object/public/')) {
+          setAvatarSrc(url);
+          return;
+        }
+
+        // Tentar gerar URL assinada para bucket privado
+        const match = url.match(/\/storage\/v1\/object\/(?:public\/)?([^\/]+)\/(.+)/);
+        if (!match) {
+          setAvatarSrc(url);
+          return;
+        }
+        const bucket = match[1];
+        const filePath = match[2];
+
+        // Sempre tentar gerar URL assinada, independentemente de o caminho conter 'public/'
+        const { data: signedData, error: signedError } = await supabase.storage.from(bucket).createSignedUrl(filePath, 60 * 60);
+        if (!signedError && signedData?.signedUrl) {
+          if (!cancelled) setAvatarSrc(signedData.signedUrl);
+          return;
+        }
+
+        // Fallback: tentar URL pública (funciona apenas se o bucket for público)
+        const { data: publicData } = supabase.storage.from(bucket).getPublicUrl(filePath);
+        if (!cancelled) setAvatarSrc(publicData?.publicUrl || url);
+      } catch (e) {
+        console.warn('⚠️ Erro ao resolver URL do avatar:', e?.message || e);
+        setAvatarSrc(normalizeAvatarUrl(url));
+      }
+    }
+
+    resolve();
+    return () => { cancelled = true; };
+  }, [userProfile?.avatar_url])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -44,18 +108,24 @@ const Profile = () => {
 
   const handleSave = async () => {
     try {
-      const response = await apiRequest('users/profile', {
-        method: 'PUT',
-        body: JSON.stringify(formData)
-      })
-      
-      if (response.success && response.data) {
+      // Enviar apenas campos preenchidos para evitar erros 400 por constraints
+      const allowed = ['username', 'full_name', 'bio', 'city', 'state', 'phone', 'birth_date']
+      const payload = {}
+      for (const key of allowed) {
+        const value = formData[key]
+        if (value !== undefined && value !== null && value !== '') {
+          payload[key] = value
+        }
+      }
+
+      const response = await apiClient.put('/users/profile', payload)
+      if (response.status >= 200 && response.status < 300) {
         setIsEditing(false)
-        // Atualizar os dados do perfil no contexto
         await refreshUserProfile()
         alert('Perfil atualizado com sucesso!')
       } else {
-        alert(`Erro ao atualizar perfil: ${response.error || 'Erro desconhecido'}`)
+        const errorMsg = (response.data && (response.data.error || response.data.message)) || response.statusText || 'Erro desconhecido'
+        alert(`Erro ao atualizar perfil: ${errorMsg}`)
       }
     } catch (error) {
       const errorMessage = error.message || 'Erro desconhecido'
@@ -102,7 +172,7 @@ const Profile = () => {
       
       // Upload para o Supabase Storage
       const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('avatars')
+        .from(AVATAR_BUCKET)
         .upload(fileName, file, {
           cacheControl: '3600',
           upsert: true
@@ -115,27 +185,38 @@ const Profile = () => {
       
       // Obter URL pública
       const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
+        .from(AVATAR_BUCKET)
         .getPublicUrl(fileName)
-      
-      // Preparar dados para atualização
+
+      // Atualizar metadata no Supabase Auth se houver sessão
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const { error: authUpdateError } = await supabase.auth.updateUser({
+            data: { avatar_url: publicUrl }
+          });
+          if (authUpdateError) {
+            console.warn('⚠️ Falha ao atualizar metadata do usuário:', authUpdateError.message)
+          }
+        }
+      } catch (e) {
+        console.warn('⚠️ updateUser ignorado: sessão ausente ou inválida')
+      }
+
+      // Preparar dados para atualização (apenas avatar para evitar conflitos)
       const updateData = {
-        ...formData,
         avatar_url: publicUrl
       }
       
       // Atualizar perfil com nova URL do avatar
-      const response = await apiRequest('users/profile', {
-        method: 'PUT',
-        body: JSON.stringify(updateData)
-      })
+      const response = await apiClient.put('/users/profile', updateData)
       
-      if (response.success && response.data) {
+      if (response.status >= 200 && response.status < 300) {
         alert('Avatar atualizado com sucesso!')
-        // Atualizar os dados do perfil no contexto
         await refreshUserProfile()
       } else {
-        alert(`Erro ao atualizar avatar: ${response.error}`)
+        const errorMsg = (response.data && (response.data.error || response.data.message)) || response.statusText || 'Erro desconhecido'
+        alert(`Erro ao atualizar avatar: ${errorMsg}`)
       }
       
     } catch (error) {
@@ -224,9 +305,13 @@ const Profile = () => {
                   <div className="w-20 h-20 bg-primary-600 rounded-full flex items-center justify-center">
                     {userProfile?.avatar_url ? (
                       <img
-                        src={userProfile.avatar_url}
+                        src={avatarSrc || (userProfile?.avatar_url && (!userProfile?.avatar_url.includes('/storage/v1/object/') || userProfile?.avatar_url.includes('/storage/v1/object/public/')) ? userProfile?.avatar_url : '')}
                         alt="Avatar"
                         className="w-20 h-20 rounded-full object-cover"
+                        onError={(e) => {
+                          const initials = (userProfile?.username || 'U').charAt(0).toUpperCase();
+                          e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=3b82f6&color=ffffff&size=128`;
+                        }}
                       />
                     ) : (
                       <span className="text-2xl font-bold text-white">

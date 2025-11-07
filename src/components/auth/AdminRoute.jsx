@@ -1,72 +1,75 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
-import { isAdmin } from '../../lib/supabase'
+import { apiClient } from '../../lib/api'
 import { Loader2, Shield } from 'lucide-react'
+import { BRAND } from '../../utils/brand'
 
-const AdminRoute = ({ children }) => {
+export default function AdminRoute({ children }) {
   const { user, userProfile, loading } = useAuth()
   const [isAdminUser, setIsAdminUser] = useState(false)
-  const [checkingAdmin, setCheckingAdmin] = useState(true)
+  const [checking, setChecking] = useState(true)
 
   useEffect(() => {
-    const checkAdminStatus = async () => {
-      if (user) {
-        // Verificação simples por email para demo - admin não precisa confirmar email
-        if (user.email === (import.meta.env.VITE_ADMIN_EMAIL || 'admin@esquerdai.com')) {
-          setIsAdminUser(true)
-        } else {
-          // Para outros usuários, verificar se email está confirmado e se é admin
-          if (user.email_confirmed_at) {
-            const adminStatus = await isAdmin(user.id)
-            setIsAdminUser(adminStatus)
-          } else {
-            setIsAdminUser(false)
-          }
-        }
+    let isMounted = true
+
+    async function checkAdmin() {
+      // Evitar checar enquanto o auth ainda está carregando
+      if (loading) {
+        setChecking(true)
+        return
       }
-      setCheckingAdmin(false)
+
+      // Se não há usuário autenticado, não é admin
+      if (!user) {
+        if (isMounted) {
+          setIsAdminUser(false)
+          setChecking(false)
+        }
+        return
+      }
+
+      setChecking(true)
+      try {
+        // Preferir role do backend; fallback para checagens locais
+        const res = await apiClient.get('/users/profile')
+        const role = res?.data?.role || res?.data?.data?.role
+        const backendIsAdmin = role === 'admin' || role === 'super_admin'
+
+        const clientIsAdmin = !!userProfile?.is_admin || (user?.email === BRAND.adminEmail)
+        const finalIsAdmin = backendIsAdmin || clientIsAdmin
+
+        if (isMounted) {
+          setIsAdminUser(finalIsAdmin)
+        }
+      } catch (err) {
+        const clientIsAdmin = !!userProfile?.is_admin || (user?.email === BRAND.adminEmail)
+        if (isMounted) {
+          setIsAdminUser(clientIsAdmin)
+        }
+      } finally {
+        if (isMounted) setChecking(false)
+      }
     }
 
-    if (!loading) {
-      checkAdminStatus()
+    checkAdmin()
+    return () => {
+      isMounted = false
     }
-  }, [user, loading])
+  // Dependências específicas para evitar rechecagens desnecessárias
+  }, [loading, user?.email, userProfile?.is_admin])
 
-  if (loading || checkingAdmin) {
+  // Enquanto carregamos/checamos, mostrar um loader discreto
+  if (loading || checking) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary-600 mx-auto mb-4" />
-          <p className="text-gray-600">Verificando permissões...</p>
-        </div>
+      <div className="flex items-center justify-center py-10 text-gray-600">
+        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+        <span>Verificando acesso admin...</span>
       </div>
     )
   }
 
-  if (!user) {
-    return <Navigate to="/login" replace />
-  }
-
-  if (!isAdminUser) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Shield className="h-16 w-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Acesso Negado</h2>
-          <p className="text-gray-600 mb-4">Você não tem permissão para acessar esta área.</p>
-          <button
-            onClick={() => window.history.back()}
-            className="btn-primary"
-          >
-            Voltar
-          </button>
-        </div>
-      </div>
-    )
-  }
+  if (!isAdminUser) return <Navigate to="/" replace />
 
   return children
 }
-
-export default AdminRoute

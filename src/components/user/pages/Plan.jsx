@@ -18,7 +18,7 @@ const Plan = () => {
   const fallbackPlans = [
     {
       id: 'gratuito',
-      name: 'Patriota Gratuito',
+      name: 'Progressista Gratuito',
       monthlyPrice: 0,
       yearlyPrice: 0,
       icon: Users,
@@ -38,7 +38,7 @@ const Plan = () => {
     },
     {
       id: 'engajado',
-      name: 'Patriota Engajado',
+      name: 'Progressista Engajado',
       monthlyPrice: 29.90,
       yearlyPrice: 299.00,
       icon: Star,
@@ -59,7 +59,7 @@ const Plan = () => {
     },
     {
       id: 'lider',
-      name: 'Patriota Líder',
+      name: 'Progressista Líder',
       monthlyPrice: 59.90,
       yearlyPrice: 599.00,
       icon: Crown,
@@ -80,7 +80,7 @@ const Plan = () => {
     },
     {
       id: 'supremo',
-      name: 'Patriota Supremo',
+      name: 'Progressista Supremo',
       monthlyPrice: 89.90,
       yearlyPrice: 899.00,
       icon: Trophy,

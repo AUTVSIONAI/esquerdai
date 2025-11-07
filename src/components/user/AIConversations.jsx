@@ -209,7 +209,7 @@ const AIConversations = () => {
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold text-gray-900">Conversas Recentes</h3>
           <Link 
-            to="/dashboard/direitagpt" 
+            to="/dashboard/esquerdagpt" 
             className="text-primary-600 hover:text-primary-700 text-sm font-medium flex items-center"
           >
             Ver todas
@@ -232,7 +232,7 @@ const AIConversations = () => {
             <MessageCircle className="h-12 w-12 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-500 mb-4">Nenhuma conversa encontrada</p>
             <Link 
-              to="/dashboard/direitagpt" 
+              to="/dashboard/esquerdagpt" 
               className="btn-primary"
             >
               Iniciar primeira conversa
@@ -267,7 +267,7 @@ const AIConversations = () => {
                   
                   <div className="ml-4 flex-shrink-0">
                     <Link 
-                        to="/dashboard/direitagpt"
+                        to="/dashboard/esquerdagpt"
                         className="text-primary-600 hover:text-primary-700 text-sm font-medium"
                       >
                         Conversar

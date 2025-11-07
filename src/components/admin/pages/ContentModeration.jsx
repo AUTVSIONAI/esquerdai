@@ -90,7 +90,7 @@ const ContentModeration = () => {
     switch (priority) {
       case 'high': return 'bg-red-100 text-red-800'
       case 'medium': return 'bg-yellow-100 text-yellow-800'
-      case 'low': return 'bg-green-100 text-green-800'
+      case 'low': return 'bg-success-100 text-success-800'
       default: return 'bg-gray-100 text-gray-800'
     }
   }
@@ -218,9 +218,9 @@ const ContentModeration = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Aprovados</p>
-              <p className="text-2xl font-bold text-green-600">{moderationStats.approved}</p>
+              <p className="text-2xl font-bold text-success-600">{moderationStats.approved}</p>
             </div>
-            <CheckCircle className="h-8 w-8 text-green-500" />
+            <CheckCircle className="h-8 w-8 text-success-500" />
           </div>
         </div>
         
@@ -438,7 +438,7 @@ const ContentModeration = () => {
                       <>
                         <button
                           onClick={() => handleApprove(content.id)}
-                          className="p-2 text-green-600 hover:text-green-800"
+                          className="p-2 text-success-600 hover:text-success-900"
                           title="Aprovar"
                         >
                           <CheckCircle className="h-4 w-4" />

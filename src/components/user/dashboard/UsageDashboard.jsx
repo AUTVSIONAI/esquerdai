@@ -117,14 +117,14 @@ const UsageDashboard = () => {
   };
 
   const getUsageColor = (used, limit) => {
-    if (limit === -1) return '#10B981'; // Verde para ilimitado
+    if (limit === -1) return '#22C55E'; // Success para ilimitado
     if (limit === 0) return '#6B7280'; // Cinza para não disponível
     
     const percentage = (used / limit) * 100;
     if (percentage >= 90) return '#EF4444'; // Vermelho
     if (percentage >= 80) return '#F59E0B'; // Amarelo
     if (percentage >= 60) return '#3B82F6'; // Azul
-    return '#10B981'; // Verde
+    return '#22C55E'; // Success para baixo uso
   };
 
   const formatLimit = (limit) => {
@@ -163,10 +163,10 @@ const UsageDashboard = () => {
 
   const getPlanName = (plan) => {
     const names = {
-      gratuito: 'Patriota Gratuito',
-      engajado: 'Patriota Engajado',
-      lider: 'Patriota Líder',
-      supremo: 'Patriota Supremo'
+      gratuito: 'Progressista Gratuito',
+      engajado: 'Progressista Engajado',
+      lider: 'Progressista Líder',
+      supremo: 'Progressista Supremo'
     };
     return names[plan] || plan;
   };
@@ -281,11 +281,11 @@ const UsageDashboard = () => {
                     
                     <div className="flex items-center gap-1 text-xs">
                       {data.canUse ? (
-                        <CheckCircle className="w-3 h-3 text-green-500" />
+                        <CheckCircle className="w-3 h-3 text-success-500" />
                       ) : (
                         <AlertCircle className="w-3 h-3 text-red-500" />
                       )}
-                      <span className={data.canUse ? 'text-green-600' : 'text-red-600'}>
+                      <span className={data.canUse ? 'text-success-600' : 'text-red-600'}>
                         {data.canUse ? 'Disponível' : 'Limite atingido'}
                       </span>
                     </div>
@@ -364,7 +364,7 @@ const UsageDashboard = () => {
                 <Line 
                   type="monotone" 
                   dataKey="ai_creative" 
-                  stroke="#10B981" 
+                  stroke="#22C55E" 
                   name="IA Criativa"
                   strokeWidth={2}
                 />

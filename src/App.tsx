@@ -44,10 +44,10 @@ function App() {
   return (
     <>
       <Helmet>
-        <title>DireitaAI - Conectando Conservadores</title>
+        <title>EsquerdaAI - Conectando Progressistas</title>
         <meta
           name="description"
-          content="Plataforma completa para o público conservador com eventos, IA, gamificação e comunidade."
+          content="Plataforma completa para o público progressista com eventos, IA, gamificação e comunidade."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#1e40af" />

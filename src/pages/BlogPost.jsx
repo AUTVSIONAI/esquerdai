@@ -5,6 +5,7 @@ import {
   MessageCircle, Heart, ExternalLink, Send, ThumbsUp, TrendingUp, Clock
 } from 'lucide-react';
 import { apiClient } from '../lib/api';
+import { getAbsoluteImageUrl } from '../utils/imageUtils';
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -146,7 +147,7 @@ const BlogPost = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-progressive-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Carregando post...</p>
         </div>
       </div>
@@ -161,7 +162,7 @@ const BlogPost = () => {
           <p className="text-gray-600 mb-6">{error}</p>
           <button
             onClick={() => navigate('/blog')}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className="bg-progressive-600 text-white px-6 py-2 rounded-lg hover:bg-progressive-700 transition-colors"
           >
             Voltar ao Blog
           </button>
@@ -179,17 +180,17 @@ const BlogPost = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-8">
-              <Link to="/" className="text-2xl font-bold text-blue-600">
+              <Link to="/" className="text-2xl font-bold text-progressive-600">
                 Esquerdai
               </Link>
               <nav className="hidden md:flex items-center gap-6">
-                <Link to="/blog" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                <Link to="/blog" className="text-gray-700 hover:text-progressive-600 font-medium transition-colors">
                   Notícias
                 </Link>
-                <Link to="/politicians" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                <Link to="/politicians" className="text-gray-700 hover:text-progressive-600 font-medium transition-colors">
                   Políticos
                 </Link>
-                <Link to="/surveys" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                <Link to="/surveys" className="text-gray-700 hover:text-progressive-600 font-medium transition-colors">
                   Pesquisas
                 </Link>
               </nav>
@@ -221,13 +222,12 @@ const BlogPost = () => {
           <article className="lg:col-span-3">
             {/* Imagem de Destaque */}
             {(post.cover_image_url || post.featured_image_url) && (
-              <div className="relative h-64 md:h-96 overflow-hidden rounded-xl shadow-lg mb-8">
-                <img
-                  src={post.cover_image_url || post.featured_image_url}
+              <div className="mb-8 rounded-xl overflow-hidden shadow-md">
+                <img 
+                  src={getAbsoluteImageUrl(post.cover_image_url || post.featured_image_url)}
                   alt={post.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-auto max-h-[70vh] object-contain bg-gray-100"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
               </div>
             )}
 
@@ -393,7 +393,7 @@ const BlogPost = () => {
                       onClick={() => sharePost('whatsapp')}
                       className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-50 transition-colors"
                     >
-                      <MessageCircle className="w-4 h-4 text-green-600" />
+                      <MessageCircle className="w-4 h-4 text-progressive-600" />
                       WhatsApp
                     </button>
                     <button
@@ -422,7 +422,7 @@ const BlogPost = () => {
               {relatedPosts.length > 0 && (
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                   <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-blue-600" />
+                    <TrendingUp className="w-5 h-5 text-progressive-600" />
                     Mais Notícias
                   </h3>
                   <div className="space-y-4">
@@ -435,13 +435,13 @@ const BlogPost = () => {
                         <div className="flex gap-3">
                           {relatedPost.cover_image_url && (
                             <img
-                              src={relatedPost.cover_image_url}
+                              src={getAbsoluteImageUrl(relatedPost.cover_image_url || relatedPost.featured_image_url)}
                               alt={relatedPost.title}
                               className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
                             />
                           )}
                           <div className="flex-1 min-w-0">
-                            <h4 className="font-medium text-gray-900 group-hover:text-blue-600 line-clamp-2 text-sm mb-1">
+                            <h4 className="font-medium text-gray-900 group-hover:text-progressive-600 line-clamp-2 text-sm mb-1">
                               {relatedPost.title}
                             </h4>
                             <p className="text-xs text-gray-500">
@@ -456,7 +456,7 @@ const BlogPost = () => {
               )}
 
               {/* Newsletter */}
-              <div className="bg-gradient-to-br from-blue-600 to-purple-700 rounded-xl p-6 text-white">
+              <div className="bg-gradient-to-br from-progressive-600 to-progressive-700 rounded-xl p-6 text-white">
                 <h3 className="text-xl font-bold mb-3">📧 Newsletter</h3>
                 <p className="text-blue-100 mb-4 text-sm">
                   Receba as principais notícias políticas direto no seu email.
@@ -545,7 +545,7 @@ const BlogPost = () => {
                   {comments.length > 0 ? (
                     comments.map((comment) => (
                       <div key={comment.id} className="flex gap-4 p-4 bg-gray-50 rounded-lg">
-                        <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        <div className="w-10 h-10 bg-gradient-to-br from-progressive-400 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
                           {comment.author.charAt(0).toUpperCase()}
                         </div>
                         <div className="flex-1">

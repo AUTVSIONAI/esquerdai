@@ -41,15 +41,15 @@ const CreativeAI = () => {
       icon: MessageSquare,
       description: 'Crie posts envolventes para redes sociais',
       color: 'blue',
-      placeholder: 'Ex: Escreva um post sobre a importância da família na sociedade'
+      placeholder: 'Ex: Escreva um post sobre igualdade, direitos humanos e serviços públicos'
     },
     {
       id: 'meme',
       name: 'Meme/Imagem',
       icon: Image,
-      description: 'Gere ideias e textos para memes conservadores',
-      color: 'green',
-      placeholder: 'Ex: Crie um meme sobre responsabilidade fiscal'
+      description: 'Gere ideias e textos para memes progressistas',
+      color: 'success',
+      placeholder: 'Ex: Crie um meme sobre justiça social ou taxação de grandes fortunas'
     },
     {
       id: 'video',
@@ -57,7 +57,7 @@ const CreativeAI = () => {
       icon: Video,
       description: 'Roteiros para vídeos educativos e informativos',
       color: 'purple',
-      placeholder: 'Ex: Roteiro de 2 minutos sobre empreendedorismo'
+      placeholder: 'Ex: Roteiro de 2 minutos sobre organização comunitária'
     },
     {
       id: 'speech',
@@ -65,7 +65,7 @@ const CreativeAI = () => {
       icon: Quote,
       description: 'Discursos inspiradores e motivacionais',
       color: 'red',
-      placeholder: 'Ex: Discurso de 5 minutos sobre patriotismo'
+      placeholder: 'Ex: Discurso de 5 minutos sobre solidariedade e democracia'
     }
   ]
 
@@ -88,7 +88,7 @@ const CreativeAI = () => {
       id: 1,
       template: 'post',
       prompt: 'Post sobre importância da família',
-      content: 'A família é o alicerce da nossa sociedade. É no seio familiar que aprendemos os valores fundamentais que nos guiarão por toda a vida: respeito, responsabilidade, amor e união. Quando fortalecemos nossas famílias, fortalecemos nossa nação. #FamíliaForte #ValoresConservadores',
+      content: 'Uma sociedade justa se constrói com direitos humanos, serviços públicos fortes e solidariedade. #ValoresProgressistas #DireitosHumanos',
       createdAt: '2024-01-15T10:30:00Z',
       tone: 'inspirador',
       length: 'curto'
@@ -97,7 +97,7 @@ const CreativeAI = () => {
       id: 2,
       template: 'speech',
       prompt: 'Discurso sobre empreendedorismo',
-      content: 'Meus caros patriotas, o empreendedorismo é a força motriz que impulsiona nossa economia e nossa sociedade. Quando um brasileiro decide abrir seu próprio negócio, ele não está apenas buscando prosperidade pessoal, mas contribuindo para o crescimento de toda a nação...',
+      content: 'Companheiras e companheiros, o empreendedorismo deve promover inclusão social e dignidade no trabalho, com políticas públicas que garantam crédito acessível e proteção aos direitos. Assim fortalecemos nossa sociedade e a democracia...',
       createdAt: '2024-01-14T15:45:00Z',
       tone: 'profissional',
       length: 'longo'
@@ -107,7 +107,8 @@ const CreativeAI = () => {
   const getTemplateColor = (color) => {
     const colors = {
       blue: 'bg-blue-100 text-blue-600 border-blue-200',
-      green: 'bg-green-100 text-green-600 border-green-200',
+      success: 'bg-success-100 text-success-600 border-success-200',
+      green: 'bg-success-100 text-success-600 border-success-200',
       purple: 'bg-purple-100 text-purple-600 border-purple-200',
       red: 'bg-red-100 text-red-600 border-red-200'
     }
@@ -165,16 +166,16 @@ const CreativeAI = () => {
         
         switch (selectedTemplate) {
           case 'post':
-            mockContent = `🇧🇷 ${prompt}\n\nNossos valores conservadores são a base de uma sociedade próspera e justa. É fundamental que defendamos nossos princípios com coragem e determinação.\n\n#ValoresConservadores #BrasilForte #Patriotismo`
+            mockContent = `✊ ${prompt}\n\nNossos valores progressistas são a base de uma sociedade justa e democrática. É fundamental defendermos direitos humanos, igualdade e serviços públicos de qualidade.\n\n#ValoresProgressistas #BrasilJusto #Democracia`
             break
           case 'meme':
-            mockContent = `💡 IDEIA PARA MEME:\n\nTítulo: "${prompt}"\n\nTexto sugerido: "Quando você entende que responsabilidade fiscal significa um futuro melhor para seus filhos"\n\nImagem sugerida: Pessoa sorrindo olhando para uma planilha de gastos\n\n#ResponsabilidadeFiscal #FuturoMelhor`
+            mockContent = `💡 IDEIA PARA MEME:\n\nTítulo: "${prompt}"\n\nTexto sugerido: "Quando você entende que justiça social e investimentos públicos constroem um futuro melhor"\n\nImagem sugerida: Pessoas celebrando uma conquista comunitária\n\n#JustiçaSocial #ServiçosPúblicos`
             break
           case 'video':
-            mockContent = `🎬 ROTEIRO DE VÍDEO\n\n[ABERTURA - 0:00-0:15]\nOlá, patriotas! Hoje vamos falar sobre ${prompt.toLowerCase()}.\n\n[DESENVOLVIMENTO - 0:15-1:30]\nO empreendedorismo é fundamental para o crescimento do nosso país...\n\n[CONCLUSÃO - 1:30-2:00]\nLembrem-se: cada negócio criado é um passo rumo à prosperidade nacional!`
+            mockContent = `🎬 ROTEIRO DE VÍDEO\n\n[ABERTURA - 0:00-0:15]\nOlá, companheiras e companheiros! Hoje vamos falar sobre ${prompt.toLowerCase()}.\n\n[DESENVOLVIMENTO - 0:15-1:30]\nA organização comunitária e a participação popular são essenciais para fortalecer a democracia e garantir direitos sociais...\n\n[CONCLUSÃO - 1:30-2:00]\nUnidos, construímos um Brasil mais justo e solidário.`
             break
           case 'speech':
-            mockContent = `🎤 DISCURSO: ${prompt}\n\nCaros compatriotas,\n\nReunimo-nos hoje para celebrar e reafirmar nosso amor pela pátria. O patriotismo não é apenas um sentimento, é um compromisso diário com a excelência, com a justiça e com o progresso de nossa nação.\n\nQuando olhamos para nossa bandeira, vemos mais que cores e símbolos. Vemos a história de um povo corajoso, trabalhador e determinado...\n\nViva o Brasil! 🇧🇷`
+            mockContent = `🎤 DISCURSO: ${prompt}\n\nCompanheiras e companheiros,\n\nNos reunimos hoje para celebrar a solidariedade, a justiça social e a defesa da democracia. Nossa luta é por direitos, dignidade e um país que coloque as pessoas em primeiro lugar.\n\nQuando nos organizamos, vencemos.`
             break
           default:
             mockContent = 'Conteúdo gerado com base no seu prompt.'
@@ -233,7 +234,7 @@ const CreativeAI = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">IA Criativa</h2>
-          <p className="text-gray-600">Crie conteúdo conservador de qualidade com inteligência artificial</p>
+          <p className="text-gray-600">Crie conteúdo progressista de qualidade com inteligência artificial</p>
         </div>
         <button
           onClick={() => setShowHistory(!showHistory)}
@@ -245,27 +246,27 @@ const CreativeAI = () => {
       </div>
 
       {/* Usage Stats */}
-      <div className={`card ${limitError ? 'bg-red-50 border-red-200' : (usageStats?.plan === 'gratuito') ? 'bg-blue-50 border-blue-200' : 'bg-green-50 border-green-200'}`}>
+      <div className={`card ${limitError ? 'bg-red-50 border-red-200' : (usageStats?.plan === 'gratuito') ? 'bg-blue-50 border-blue-200' : 'bg-success-50 border-success-200'}`}>
         <div className="flex items-center space-x-3">
           <div className={`flex items-center justify-center w-10 h-10 rounded-lg ${
-            limitError ? 'bg-red-100' : (usageStats?.plan === 'gratuito') ? 'bg-blue-100' : 'bg-green-100'
+            limitError ? 'bg-red-100' : (usageStats?.plan === 'gratuito') ? 'bg-blue-100' : 'bg-success-100'
           }`}>
             <Sparkles className={`h-5 w-5 ${
-              limitError ? 'text-red-600' : (usageStats?.plan === 'gratuito') ? 'text-blue-600' : 'text-green-600'
+              limitError ? 'text-red-600' : (usageStats?.plan === 'gratuito') ? 'text-blue-600' : 'text-success-600'
             }`} />
           </div>
           <div className="flex-1">
             <h3 className={`font-medium ${
-              limitError ? 'text-red-900' : (usageStats?.plan === 'gratuito') ? 'text-blue-900' : 'text-green-900'
+              limitError ? 'text-red-900' : (usageStats?.plan === 'gratuito') ? 'text-blue-900' : 'text-success-900'
             }`}>
-              {limitError ? 'Limite Atingido' : 
-                (usageStats?.plan === 'gratuito') ? 'Plano Patriota Gratuito' :
-                (usageStats?.plan === 'engajado') ? 'Plano Patriota Engajado' :
-                (usageStats?.plan === 'premium') ? 'Plano Patriota Premium' :
-                (usageStats?.plan === 'lider') ? 'Plano Patriota Líder' : 'Seu Plano'}
+             {limitError ? 'Limite Atingido' : 
+               (usageStats?.plan === 'gratuito') ? 'Plano Progressista Gratuito' :
+               (usageStats?.plan === 'engajado') ? 'Plano Progressista Engajado' :
+               (usageStats?.plan === 'premium') ? 'Plano Progressista Premium' :
+               (usageStats?.plan === 'lider') ? 'Plano Progressista Líder' : 'Seu Plano'}
             </h3>
             <p className={`text-sm ${
-              limitError ? 'text-red-800' : (usageStats?.plan === 'gratuito') ? 'text-blue-800' : 'text-green-800'
+              limitError ? 'text-red-800' : (usageStats?.plan === 'gratuito') ? 'text-blue-800' : 'text-success-800'
             }`}>
               {limitError ? limitError :
                (usageStats?.limits?.generations === -1) ? 'Gerações ilimitadas' :

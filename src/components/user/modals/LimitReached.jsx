@@ -48,7 +48,7 @@ const LimitReached = ({
       gratuito: [
         {
           id: 'engajado',
-          name: 'Patriota Engajado',
+          name: 'Progressista Engajado',
           price: 'R$ 29,90/mês',
           benefits: {
             fake_news: '5 análises por dia',
@@ -59,7 +59,7 @@ const LimitReached = ({
         },
         {
           id: 'lider',
-          name: 'Patriota Líder',
+          name: 'Progressista Líder',
           price: 'R$ 59,90/mês',
           benefits: {
             fake_news: '10 análises por dia',
@@ -69,7 +69,7 @@ const LimitReached = ({
         },
         {
           id: 'supremo',
-          name: 'Patriota Supremo',
+          name: 'Progressista Supremo',
           price: 'R$ 89,90/mês',
           benefits: {
             fake_news: '20 análises por dia',
@@ -81,7 +81,7 @@ const LimitReached = ({
       engajado: [
         {
           id: 'lider',
-          name: 'Patriota Líder',
+          name: 'Progressista Líder',
           price: 'R$ 59,90/mês',
           benefits: {
             fake_news: '10 análises por dia',
@@ -92,7 +92,7 @@ const LimitReached = ({
         },
         {
           id: 'supremo',
-          name: 'Patriota Supremo',
+          name: 'Progressista Supremo',
           price: 'R$ 89,90/mês',
           benefits: {
             fake_news: '20 análises por dia',
@@ -104,7 +104,7 @@ const LimitReached = ({
       lider: [
         {
           id: 'supremo',
-          name: 'Patriota Supremo',
+          name: 'Progressista Supremo',
           price: 'R$ 89,90/mês',
           benefits: {
             fake_news: '20 análises por dia',

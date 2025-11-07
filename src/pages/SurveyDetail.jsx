@@ -179,7 +179,7 @@ const SurveyDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-green-700 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-progressive-600 flex items-center justify-center">
         <div className="text-white text-xl">Carregando pesquisa...</div>
       </div>
     )
@@ -187,7 +187,7 @@ const SurveyDetail = () => {
 
   if (!survey) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-green-700 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-progressive-600 flex items-center justify-center">
         <div className="text-white text-xl">Pesquisa não encontrada</div>
       </div>
     )
@@ -274,8 +274,7 @@ const SurveyDetail = () => {
                         ? 'cursor-pointer bg-gray-50 border-gray-300 hover:bg-gray-100'
                         : 'hover:bg-progressive-50 bg-white border-progressive-200 hover:border-progressive-300'
                     } ${
--                      isSelected ? 'ring-2 ring-primary-500 bg-primary-50' : ''
-+                      isSelected ? 'ring-2 ring-progressive-500 bg-progressive-50' : ''
+                      isSelected ? 'ring-2 ring-progressive-500 bg-progressive-50' : ''
                     }`}
                   >
                     <div className="flex items-center justify-between">

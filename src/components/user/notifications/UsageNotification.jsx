@@ -62,14 +62,14 @@ const UsageNotification = ({ userId, onClose }) => {
   };
 
   const getUsageColor = (used, limit) => {
-    if (limit === -1) return 'green'; // Ilimitado
+    if (limit === -1) return 'success'; // Ilimitado
     if (limit === 0) return 'gray'; // Sem limite
     
     const percentage = (used / limit) * 100;
     if (percentage >= 90) return 'red';
     if (percentage >= 80) return 'yellow';
     if (percentage >= 60) return 'blue';
-    return 'green';
+    return 'success';
   };
 
   const getUsageIcon = (used, limit) => {

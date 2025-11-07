@@ -3,82 +3,76 @@ import { Download, CheckCircle, BookOpen, Award } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { GamificationService } from '../../services/gamification';
 import { ConstitutionService } from '../../services/constitution';
-import { supabase } from '../../lib/supabase';
+import { apiClient } from '../../lib/api';
+import { useGamification } from '../../hooks/useGamification'
 
 const ConstitutionDownload = () => {
-  const { user, userProfile } = useAuth();
+  const { userProfile } = useAuth();
+  const { refreshData } = useGamification()
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isLoadingStatus, setIsLoadingStatus] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
   const [userPoints, setUserPoints] = useState(null);
+  const [resolvedUserId, setResolvedUserId] = useState(null);
+
+  // Fallback imediato: usar localStorage para evitar mostrar o card como disponível no reload
+  useEffect(() => {
+    const flag = localStorage.getItem('constituicao_baixada');
+    if (flag === 'true') {
+      setIsDownloaded(true);
+    }
+  }, []);
 
   useEffect(() => {
-    if (userProfile?.id) {
-      console.log('🔍 ConstitutionDownload - userProfile:', userProfile);
-      console.log('🔍 ConstitutionDownload - using ID:', userProfile.id);
+    const init = async () => {
+      if (!userProfile?.id) return;
+      try {
+        // Resolver o userId correto da tabela public.users via backend
+        const profileRes = await apiClient.get('/users/profile');
+        const id = profileRes?.data?.id || profileRes?.data?.userId || profileRes?.data?.data?.id;
+        const finalId = id || userProfile.id;
+        setResolvedUserId(finalId);
+      } catch (e) {
+        setResolvedUserId(userProfile.id);
+      }
+    };
+    init();
+  }, [userProfile]);
+
+  useEffect(() => {
+    if (resolvedUserId) {
       checkDownloadStatus();
       fetchUserPoints();
     }
-  }, [userProfile]);
+  }, [resolvedUserId]);
 
   const checkDownloadStatus = async () => {
+    setIsLoadingStatus(true);
     try {
-      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
-      // Usar o auth_id do Supabase para as rotas de constitution-downloads
-      const userId = user?.id || userProfile?.auth_id;
-      const response = await fetch(`${API_BASE_URL}/constitution-downloads/users/${userId}/status`, {
-        headers: {
-          'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`
-        }
-      });
-      
-      if (response.ok) {
-        const status = await response.json();
-        setIsDownloaded(status.hasDownloaded);
-      } else {
-        console.error('Erro ao verificar status:', response.status);
-        // Fallback para localStorage em caso de erro
-        const downloaded = localStorage.getItem('constituicao_baixada');
-        if (downloaded === 'true') {
-          setIsDownloaded(true);
-        }
-      }
+      const idToCheck = resolvedUserId || userProfile?.id;
+      if (!idToCheck) return;
+      const status = await ConstitutionService.getDownloadStatus(idToCheck);
+      setIsDownloaded(!!status?.hasDownloaded);
     } catch (error) {
       console.error('Erro ao verificar status de download:', error);
-      // Fallback para localStorage em caso de erro
       const downloaded = localStorage.getItem('constituicao_baixada');
-      if (downloaded === 'true') {
-        setIsDownloaded(true);
-      }
+      if (downloaded === 'true') setIsDownloaded(true);
+    } finally {
+      setIsLoadingStatus(false);
     }
   };
 
+  // Buscar pontos do usuário usando o id da tabela users obtido via backend
   const fetchUserPoints = async () => {
     try {
-      // Buscar o user_id correto da tabela users usando o auth_id
-      const session = await supabase.auth.getSession();
-      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
-      
-      // Primeiro, buscar o user_id da tabela users
-      const userResponse = await fetch(`${API_BASE_URL}/users/profile`, {
-        headers: {
-          'Authorization': `Bearer ${session.data.session?.access_token}`
-        }
-      });
-      
-      if (userResponse.ok) {
-        const userData = await userResponse.json();
-        const userId = userData.id; // ID da tabela users
-        console.log('🎮 Buscando pontos para userId da tabela users:', userId);
-        const points = await GamificationService.getUserPoints(userId);
-        setUserPoints(points);
-      } else {
-        throw new Error('Não foi possível obter dados do usuário');
-      }
+      const profileRes = await apiClient.get('/users/profile')
+      const userId = profileRes?.data?.id || profileRes?.data?.userId || profileRes?.data?.data?.id
+      const points = await GamificationService.getUserPoints(userId)
+      setUserPoints(points)
     } catch (error) {
-      console.error('Erro ao buscar pontos:', error);
-      // Definir pontos padrão em caso de erro
-      setUserPoints({ total: 0, level: 1, nextLevelPoints: 100 });
+      console.error('Erro ao buscar pontos:', error)
+      setUserPoints({ total: 0, level: 1, nextLevelPoints: 100 })
     }
   };
 
@@ -87,65 +81,36 @@ const ConstitutionDownload = () => {
       alert('Você precisa estar logado para baixar a Constituição!');
       return;
     }
-
     if (isDownloaded) {
       alert('Você já baixou a Constituição anteriormente!');
       return;
     }
-
+    if (!resolvedUserId) {
+      alert('Não foi possível identificar seu usuário. Tente novamente.');
+      return;
+    }
     setIsDownloading(true);
-
     try {
-      // Primeiro, registrar o download no backend
-      const session = await supabase.auth.getSession();
-      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
-      // Usar auth_id para constitution-downloads
-      const authUserId = user?.id || userProfile?.auth_id;
-      const response = await fetch(`${API_BASE_URL}/constitution-downloads/users/${authUserId}/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.data.session?.access_token}`
-        }
-      });
-
-      if (response.status === 409) {
-        // Usuário já baixou
-        setIsDownloaded(true);
-        localStorage.setItem('constituicao_baixada', 'true');
-        alert('Você já baixou a Constituição anteriormente!');
-        return;
-      }
-
-      if (!response.ok) {
-        throw new Error(`Erro ${response.status}: ${response.statusText}`);
-      }
-
-      const result = await response.json();
-      
-      // Se o registro foi bem-sucedido, fazer o download do arquivo
+      const result = await ConstitutionService.registerDownload(resolvedUserId);
+      // Se o backend retornar sucesso, seguir com o fluxo de download
       ConstitutionService.downloadPDF();
-      
-      // Marcar como baixado
       setIsDownloaded(true);
       localStorage.setItem('constituicao_baixada', 'true');
-
-      // Atualizar pontos do usuário
       await fetchUserPoints();
-
-      // Mostrar mensagem de sucesso
+      await refreshData();
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 5000);
-
-      console.log('✅ Download registrado com sucesso:', result);
-
     } catch (error) {
       console.error('Erro ao baixar Constituição:', error);
-      
-      // Verificar se é erro de rede ou servidor
-      if (error.message.includes('Failed to fetch')) {
+      const msg = String(error?.message || '').toLowerCase();
+      // Se já baixou, refletir o estado corretamente no frontend
+      if (msg.includes('já baixou') || msg.includes('download já registrado')) {
+        setIsDownloaded(true);
+        localStorage.setItem('constituicao_baixada', 'true');
+        alert('Você já baixou a Constituição anteriormente.');
+      } else if (msg.includes('failed to fetch')) {
         alert('Erro de conexão. Verifique sua internet e tente novamente.');
-      } else if (error.message.includes('403')) {
+      } else if (msg.includes('403')) {
         alert('Erro de autenticação. Faça login novamente.');
       } else {
         alert('Erro ao processar download. Tente novamente mais tarde.');
@@ -157,6 +122,11 @@ const ConstitutionDownload = () => {
 
   if (!userProfile) {
     return null; // Não mostrar para usuários não logados
+  }
+
+  // Evitar mostrar o card como disponível até confirmar status
+  if (isLoadingStatus && !isDownloaded) {
+    return null;
   }
 
   if (isDownloaded) {
@@ -220,8 +190,8 @@ const ConstitutionDownload = () => {
           <div className="flex-shrink-0">
             <button
               onClick={handleDownload}
-              disabled={isDownloading}
-              className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-3 rounded-lg font-medium flex items-center space-x-2 transition-colors duration-200 shadow-md hover:shadow-lg"
+              disabled={isDownloading || isLoadingStatus}
+              className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-3 rounded-lg font-medium flex items-center space-x-2 transition-colors duração-200 shadow-md hover:shadow-lg"
             >
               {isDownloading ? (
                 <>

@@ -112,8 +112,8 @@ const StoreManagement = () => {
     setProductForm({
       name: product.name || '',
       description: product.description || '',
-      price: product.price?.toString() || '',
-      stock_quantity: product.stock_quantity?.toString() || '',
+      price: (product.price !== undefined && product.price !== null) ? product.price.toString() : '',
+      stock_quantity: (product.stock_quantity ?? product.stock ?? '').toString(),
       category: product.category || '',
       status: product.status || 'active',
       featured: product.featured || false,
@@ -184,11 +184,40 @@ const StoreManagement = () => {
         // Usar o preview se não houver arquivo mas houver preview (caso de edição)
         imageUrl = imagePreview
       }
-      
+
+      // Validações básicas do formulário (não dependem do HTML5 required)
+      const name = (productForm.name || '').trim()
+      const priceStr = String(productForm.price ?? '').trim()
+      const stockStr = String(productForm.stock_quantity ?? '').trim()
+      // Categoria com fallback quando não há categorias cadastradas
+      const category = ((productForm.category || '').trim()) || (Array.isArray(categories) && categories.length === 0 ? 'Geral' : '')
+
+      const parsedPrice = priceStr ? Number(priceStr.replace(/[^\d.,-]/g, '').replace(',', '.')) : NaN
+      const parsedStock = stockStr ? parseInt(stockStr, 10) : 0
+
+      if (!name) {
+        alert('Informe o nome do produto.')
+        return
+      }
+      if (!category) {
+        alert('Selecione uma categoria.')
+        return
+      }
+      if (Number.isNaN(parsedPrice)) {
+        alert('Informe um preço válido (ex: 19,99).')
+        return
+      }
+
+      // Montar payload alinhado ao schema do backend (stock em vez de stock_quantity)
       const productData = {
-        ...productForm,
-        price: parseFloat(productForm.price),
-        stock_quantity: parseInt(productForm.stock_quantity),
+        name,
+        description: productForm.description,
+        category,
+        status: productForm.status || (parsedStock > 0 ? 'active' : 'out_of_stock'),
+        featured: !!productForm.featured,
+        warehouse_location: productForm.warehouse_location,
+        price: parsedPrice,
+        stock: Number.isNaN(parsedStock) ? 0 : parsedStock,
         image: imageUrl
       }
       
@@ -220,7 +249,9 @@ const StoreManagement = () => {
       await loadData()
     } catch (error) {
       console.error('Erro ao salvar produto:', error)
-      alert('Erro ao salvar produto. Tente novamente.')
+      const apiError = error?.response?.data?.error || error?.message || 'Erro ao salvar produto.'
+      const details = error?.response?.data?.details
+      alert(`${apiError}${details ? ' - ' + details : ''}`)
     }
   }
 
@@ -1033,11 +1064,15 @@ const StoreManagement = () => {
                     required
                   >
                     <option value="">Selecione uma categoria</option>
-                    {Array.isArray(categories) && categories.map(category => (
-                      <option key={category.id || category} value={category.id || category}>
-                        {category.name || category}
-                      </option>
-                    ))}
+                    {Array.isArray(categories) && categories.length > 0 ? (
+                      categories.map(category => (
+                        <option key={category.id || category} value={category.id || category}>
+                          {category.name || category}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="Geral">Geral</option>
+                    )}
                   </select>
                 </div>
                 <div>

@@ -102,7 +102,7 @@ const VerdadeOuFake = () => {
   const getResultIcon = (resultado: string) => {
     switch (resultado) {
       case 'verdade':
-        return <CheckCircle className="w-8 h-8 text-green-500" />;
+        return <CheckCircle className="w-8 h-8 text-success-500" />;
       case 'tendencioso':
         return <AlertTriangle className="w-8 h-8 text-yellow-500" />;
       case 'fake':
@@ -115,7 +115,7 @@ const VerdadeOuFake = () => {
   const getResultColor = (resultado: string) => {
     switch (resultado) {
       case 'verdade':
-        return 'bg-green-50 border-green-200 text-green-800';
+        return 'bg-success-50 border-success-200 text-success-800';
       case 'tendencioso':
         return 'bg-yellow-50 border-yellow-200 text-yellow-800';
       case 'fake':
@@ -222,6 +222,31 @@ const VerdadeOuFake = () => {
       });
 
       if (!response.success) {
+        // Fallback: tentar exibir o resultado mesmo se salvar falhar
+        const raw = response.data;
+        let parsed: any = raw;
+        try {
+          if (typeof parsed === 'string') parsed = JSON.parse(parsed);
+        } catch {}
+        try {
+          if (parsed?.content && typeof parsed.content === 'string') parsed = JSON.parse(parsed.content);
+        } catch {}
+
+        if (parsed && (parsed.resultado || parsed.confianca || parsed.explicacao)) {
+          const normalized = {
+            id: parsed.id || '',
+            resultado: parsed.resultado || 'tendencioso',
+            confianca: parsed.confianca || 0,
+            explicacao: parsed.explicacao || '',
+            fontes: Array.isArray(parsed.fontes) ? parsed.fontes : [],
+            created_at: new Date().toISOString()
+          } as AnalysisResult;
+          setResult(normalized);
+          setError('Análise concluída, mas não foi possível salvar o histórico.');
+          // Não retornar histórico se o backend falhou
+          return;
+        }
+
         // Verificar se é erro de limite atingido
         if (response.error && response.error.includes('limite diário')) {
           setLimitInfo({
@@ -383,57 +408,31 @@ const VerdadeOuFake = () => {
     }
   };
 
-  const giveFeedback = async (tipo: 'concordo' | 'discordo') => {
-    if (!result || !user || feedbackGiven) return;
-
+  const giveFeedback = async (isAccurate: boolean) => {
     try {
+      setIsSubmittingFeedback(true);
       const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session?.access_token) {
-        console.log('No session available for feedback');
-        return;
-      }
-
-      const response = await apiRequest(`fake-news/${result.id}/feedback`, {
+      if (!session?.access_token) throw new Error('Sessão expirada. Faça login novamente.');
+  
+      const response = await apiRequest(`fake-news/${result!.id}/feedback`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
         },
-        body: JSON.stringify({
-          tipo_feedback: tipo,
-          comentario: ''
-        })
+        body: JSON.stringify({ accurate: isAccurate })
       });
-
-      if (response.ok) {
+  
+      if (response.success) {
         setFeedbackGiven(true);
-        const successMessage = tipo === 'concordo' 
-          ? 'Obrigado pelo feedback positivo!' 
-          : 'Obrigado pelo feedback. Vamos melhorar nossa análise.';
-        
-        // Mostrar mensagem de sucesso para o usuário
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
-        messageDiv.textContent = successMessage;
-        document.body.appendChild(messageDiv);
-        
-        setTimeout(() => {
-          document.body.removeChild(messageDiv);
-        }, 3000);
+        setFeedbackMessage(isAccurate ? 'Obrigado! Sua avaliação ajuda a melhorar.' : 'Obrigado! Informaremos que houve imprecisão.');
+      } else {
+        throw new Error(response.error || 'Falha ao enviar feedback');
       }
-    } catch (err) {
-      console.error('Erro ao enviar feedback:', err);
-      
-      // Mostrar mensagem de erro
-      const errorDiv = document.createElement('div');
-      errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
-      errorDiv.textContent = 'Erro ao enviar feedback. Tente novamente.';
-      document.body.appendChild(errorDiv);
-      
-      setTimeout(() => {
-        document.body.removeChild(errorDiv);
-      }, 3000);
+    } catch (error: any) {
+      setFeedbackMessage(error.message || 'Erro ao enviar feedback');
+    } finally {
+      setIsSubmittingFeedback(false);
     }
   };
 
@@ -460,8 +459,10 @@ const VerdadeOuFake = () => {
         })
       });
 
-      if (response.ok) {
+      if (response.success) {
         alert('Conteúdo denunciado com sucesso. Nossa equipe irá revisar.');
+      } else {
+        throw new Error(response.error || 'Falha ao enviar denúncia');
       }
     } catch (error) {
       console.error('Erro ao denunciar conteúdo:', error);
@@ -490,17 +491,14 @@ const VerdadeOuFake = () => {
           url: window.location.href
         });
       } else {
-        // Fallback: copiar para clipboard
-        await navigator.clipboard.writeText(shareText);
-        
-        // Mostrar mensagem de sucesso
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'fixed top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
-        messageDiv.textContent = 'Análise copiada para a área de transferência!';
-        document.body.appendChild(messageDiv);
+        // Mostrar mensagem de erro
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+        errorDiv.textContent = 'Erro ao compartilhar. Tente novamente.';
+        document.body.appendChild(errorDiv);
         
         setTimeout(() => {
-          document.body.removeChild(messageDiv);
+          document.body.removeChild(errorDiv);
         }, 3000);
       }
     } catch (error) {
@@ -532,7 +530,7 @@ const VerdadeOuFake = () => {
   }, [user, currentPage, searchTerm, filterResult, filterType, showFullHistory]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-progressive-50 to-progressive-100">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
@@ -544,7 +542,7 @@ const VerdadeOuFake = () => {
               <ArrowLeft className="h-5 w-5 mr-2" />
               Voltar
             </button>
-            <Shield className="w-12 h-12 text-blue-600 mr-3" />
+            <Shield className="w-12 h-12 text-progressive-600 mr-3" />
             <h1 className="text-4xl font-bold text-gray-900">Verdade ou Fake</h1>
           </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -568,7 +566,7 @@ const VerdadeOuFake = () => {
                       onClick={() => setInputType('texto')}
                       className={`flex items-center px-4 py-2 rounded-lg border-2 transition-colors ${
                         inputType === 'texto'
-                          ? 'border-blue-500 bg-blue-50 text-blue-700'
+                          ? 'border-progressive-500 bg-progressive-50 text-progressive-700'
                           : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
@@ -579,7 +577,7 @@ const VerdadeOuFake = () => {
                       onClick={() => setInputType('link')}
                       className={`flex items-center px-4 py-2 rounded-lg border-2 transition-colors ${
                         inputType === 'link'
-                          ? 'border-blue-500 bg-blue-50 text-blue-700'
+                          ? 'border-progressive-500 bg-progressive-50 text-progressive-700'
                           : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
@@ -590,7 +588,7 @@ const VerdadeOuFake = () => {
                       onClick={() => setInputType('imagem')}
                       className={`flex items-center px-4 py-2 rounded-lg border-2 transition-colors ${
                         inputType === 'imagem'
-                          ? 'border-blue-500 bg-blue-50 text-blue-700'
+                          ? 'border-progressive-500 bg-progressive-50 text-progressive-700'
                           : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
@@ -634,7 +632,7 @@ const VerdadeOuFake = () => {
                           ? 'Cole aqui o link da notícia...'
                           : 'Cole aqui o texto da notícia...'
                       }
-                      className="w-full h-32 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      className="w-full h-32 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent resize-none"
                     />
                   )}
                 </div>
@@ -643,7 +641,7 @@ const VerdadeOuFake = () => {
                 <button
                   onClick={analyzeContent}
                   disabled={isAnalyzing || !content.trim()}
-                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center"
+                  className="w-full bg-progressive-600 hover:bg-progressive-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center"
                 >
                   {isAnalyzing ? (
                     <>
@@ -701,15 +699,17 @@ const VerdadeOuFake = () => {
                         <div className="flex items-center space-x-4 mb-3">
                           <span className="text-sm font-medium">Esta análise foi útil?</span>
                           <button
-                            onClick={() => giveFeedback('concordo')}
-                            className="flex items-center px-3 py-1 rounded-full bg-white bg-opacity-50 hover:bg-opacity-75 transition-colors"
+                            onClick={() => giveFeedback(true)}
+                            disabled={!result?.id || isSubmittingFeedback}
+                            className="flex items-center px-3 py-1 rounded-full bg-white bg-opacity-50 hover:bg-opacity-75 transition-colors disabled:opacity-50"
                           >
                             <ThumbsUp className="w-4 h-4 mr-1" />
                             Sim
                           </button>
                           <button
-                            onClick={() => giveFeedback('discordo')}
-                            className="flex items-center px-3 py-1 rounded-full bg-white bg-opacity-50 hover:bg-opacity-75 transition-colors"
+                            onClick={() => giveFeedback(false)}
+                            disabled={!result?.id || isSubmittingFeedback}
+                            className="flex items-center px-3 py-1 rounded-full bg-white bg-opacity-50 hover:bg-opacity-75 transition-colors disabled:opacity-50"
                           >
                             <ThumbsDown className="w-4 h-4 mr-1" />
                             Não
@@ -717,14 +717,14 @@ const VerdadeOuFake = () => {
                         </div>
                       ) : (
                         <div className="mb-3">
-                          <span className="text-sm font-medium text-green-600">✓ Feedback enviado com sucesso!</span>
+                          <span className="text-sm font-medium text-success-600">✓ Feedback enviado com sucesso!</span>
                         </div>
                       )}
                       
                       <div className="flex items-center space-x-3">
                         <button
                           onClick={shareAnalysis}
-                          className="flex items-center px-3 py-1 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition-colors text-sm"
+                          className="flex items-center px-3 py-1 rounded-full bg-progressive-100 hover:bg-progressive-200 text-progressive-700 transition-colors text-sm"
                         >
                           <Share2 className="w-4 h-4 mr-1" />
                           Compartilhar
@@ -732,7 +732,8 @@ const VerdadeOuFake = () => {
                         
                         <button
                           onClick={reportContent}
-                          className="flex items-center px-3 py-1 rounded-full bg-red-100 hover:bg-red-200 text-red-700 transition-colors text-sm"
+                          disabled={!result?.id}
+                          className="flex items-center px-3 py-1 rounded-full bg-red-100 hover:bg-red-200 text-red-700 transition-colors text-sm disabled:opacity-50"
                         >
                           <Flag className="w-4 h-4 mr-1" />
                           Denunciar conteúdo
@@ -749,12 +750,12 @@ const VerdadeOuFake = () => {
               {/* Estatísticas */}
               <div className="bg-white rounded-xl shadow-lg p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center">
-                  <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
+                  <TrendingUp className="w-5 h-5 mr-2 text-progressive-600" />
                   Estatísticas
                 </h3>
                 {loadingStats ? (
                   <div className="flex items-center justify-center py-4">
-                    <Loader className="w-5 h-5 animate-spin text-blue-600" />
+                    <Loader className="w-5 h-5 animate-spin text-progressive-600" />
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -770,7 +771,7 @@ const VerdadeOuFake = () => {
                       <>
                         <div className="flex justify-between">
                           <span className="text-sm text-gray-600">Conteúdo verdadeiro:</span>
-                          <span className="font-semibold text-green-600">
+                          <span className="font-semibold text-success-600">
                             {Math.round(((stats.por_resultado?.verdade || 0) / stats.total_verificacoes) * 100)}%
                           </span>
                         </div>
@@ -797,7 +798,7 @@ const VerdadeOuFake = () => {
                 <div className="bg-white rounded-xl shadow-lg p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold flex items-center">
-                      <History className="w-5 h-5 mr-2 text-blue-600" />
+                      <History className="w-5 h-5 mr-2 text-progressive-600" />
                       Suas Verificações
                     </h3>
                     <button
@@ -807,7 +808,7 @@ const VerdadeOuFake = () => {
                           loadFullHistory();
                         }
                       }}
-                      className="flex items-center px-3 py-1 text-sm text-blue-600 hover:text-blue-800 transition-colors"
+                      className="flex items-center px-3 py-1 text-sm text-progressive-600 hover:text-progressive-800 transition-colors"
                     >
                       {showFullHistory ? (
                         <>
@@ -829,7 +830,7 @@ const VerdadeOuFake = () => {
                         <div key={item.id} className="border-l-4 border-gray-200 pl-3">
                           <div className="flex items-center justify-between">
                             <span className={`text-xs px-2 py-1 rounded-full ${
-                              item.resultado === 'verdade' ? 'bg-green-100 text-green-800' :
+                              item.resultado === 'verdade' ? 'bg-success-100 text-success-800' :
                               item.resultado === 'fake' ? 'bg-red-100 text-red-800' :
                               'bg-yellow-100 text-yellow-800'
                             }`}>
@@ -898,7 +899,7 @@ const VerdadeOuFake = () => {
                        {/* Lista de Verificações */}
                        {loadingFullHistory ? (
                          <div className="flex items-center justify-center py-8">
-                           <Loader className="w-6 h-6 animate-spin text-blue-600" />
+                           <Loader className="w-6 h-6 animate-spin text-progressive-600" />
                          </div>
                        ) : fullHistory.length > 0 ? (
                          <div className="space-y-3">
@@ -908,7 +909,7 @@ const VerdadeOuFake = () => {
                                  <div className="flex-1">
                                    <div className="flex items-center space-x-2 mb-2">
                                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                       verificacao.resultado === 'verdade' ? 'bg-green-100 text-green-800' :
+                                       verificacao.resultado === 'verdade' ? 'bg-success-100 text-success-800' :
                                        verificacao.resultado === 'fake' ? 'bg-red-100 text-red-800' :
                                        'bg-yellow-100 text-yellow-800'
                                      }`}>
@@ -991,19 +992,19 @@ const VerdadeOuFake = () => {
                 <h3 className="text-lg font-semibold mb-4">Como Funciona</h3>
                 <div className="space-y-3 text-sm text-gray-600">
                   <div className="flex items-start">
-                    <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">
+                    <div className="w-6 h-6 bg-progressive-100 text-progressive-600 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">
                       1
                     </div>
                     <p>Cole o texto, link ou envie uma imagem</p>
                   </div>
                   <div className="flex items-start">
-                    <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">
+                    <div className="w-6 h-6 bg-progressive-100 text-progressive-600 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">
                       2
                     </div>
                     <p>Nossa IA analisa o conteúdo usando múltiplas fontes</p>
                   </div>
                   <div className="flex items-start">
-                    <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">
+                    <div className="w-6 h-6 bg-progressive-100 text-progressive-600 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">
                       3
                     </div>
                     <p>Receba o veredito com explicação detalhada</p>
@@ -1033,7 +1034,7 @@ const VerdadeOuFake = () => {
                   {/* Status e Informações */}
                   <div className="flex items-center space-x-3">
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                      selectedVerificacao.resultado === 'verdade' ? 'bg-green-100 text-green-800' :
+                      selectedVerificacao.resultado === 'verdade' ? 'bg-success-100 text-success-800' :
                       selectedVerificacao.resultado === 'fake' ? 'bg-red-100 text-red-800' :
                       'bg-yellow-100 text-yellow-800'
                     }`}>

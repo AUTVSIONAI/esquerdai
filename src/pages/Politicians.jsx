@@ -38,8 +38,8 @@ const Politicians = () => {
 
   const commonParties = [
     'PL', 'PP', 'REPUBLICANOS', 'UNIÃO', 'PSD', 'MDB', 'PSDB',
-    'PODEMOS', 'PDT', 'PSB', 'SOLIDARIEDADE', 'NOVO', 'PATRIOTA',
-    'PROS', 'AVANTE', 'PMN', 'CIDADANIA', 'PV', 'REDE', 'PSL'
+    'PODEMOS', 'PDT', 'PSB', 'SOLIDARIEDADE', 'NOVO', 'PSOL',
+    'PT', 'PROS', 'AVANTE', 'PMN', 'CIDADANIA', 'PV', 'REDE', 'PSL'
   ];
 
   const positions = [
@@ -110,7 +110,7 @@ const Politicians = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-800 to-yellow-600 text-white">
+      <div className="bg-gradient-to-r from-progressive-700 to-progressive-500 text-white">
         <div className="container mx-auto px-4 py-16">
           {/* Botão de Voltar */}
           <div className="mb-8">
@@ -147,7 +147,7 @@ const Politicians = () => {
                   placeholder="Buscar políticos..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                 />
               </div>
             </form>
@@ -155,7 +155,7 @@ const Politicians = () => {
             {/* Botão de Filtros */}
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-progressive-600 text-white rounded-lg hover:bg-progressive-700 transition-colors"
             >
               <Filter className="w-5 h-5" />
               Filtros
@@ -177,7 +177,7 @@ const Politicians = () => {
                       setSelectedState(e.target.value);
                       setCurrentPage(1);
                     }}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                   >
                     <option value="">Todos os estados</option>
                     {brazilianStates.map(state => (
@@ -199,7 +199,7 @@ const Politicians = () => {
                       setSelectedParty(e.target.value);
                       setCurrentPage(1);
                     }}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                   >
                     <option value="">Todos os partidos</option>
                     {commonParties.map(party => (
@@ -221,7 +221,7 @@ const Politicians = () => {
                       setSelectedPosition(e.target.value);
                       setCurrentPage(1);
                     }}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                   >
                     <option value="">Todos os cargos</option>
                     {positions.map(position => (
@@ -268,7 +268,7 @@ const Politicians = () => {
             </div>
             <button
               onClick={clearFilters}
-              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              className="px-6 py-2 bg-progressive-600 text-white rounded-lg hover:bg-progressive-700 transition-colors"
             >
               Limpar Filtros
             </button>
@@ -368,7 +368,7 @@ const Politicians = () => {
                   <div className="flex gap-2">
                     <Link
                       to={`/politicos/${politician.id}`}
-                      className="flex-1 px-3 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors text-center"
+                      className="flex-1 px-3 py-2 bg-progressive-600 text-white text-sm rounded-lg hover:bg-progressive-700 transition-colors text-center"
                     >
                       Ver Perfil
                     </Link>
@@ -408,7 +408,7 @@ const Politicians = () => {
                     onClick={() => setCurrentPage(page)}
                     className={`px-4 py-2 rounded-lg ${
                       currentPage === page
-                        ? 'bg-green-600 text-white'
+                        ? 'bg-progressive-600 text-white'
                         : 'bg-white border border-gray-300 hover:bg-gray-50'
                     }`}
                   >
@@ -429,16 +429,16 @@ const Politicians = () => {
         )}
 
         {/* Call to Action */}
-        <div className="mt-16 bg-gradient-to-r from-green-600 to-yellow-500 rounded-lg p-8 text-white text-center">
+        <div className="mt-16 bg-gradient-to-r from-progressive-600 to-progressive-500 rounded-lg p-8 text-white text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            Você é um político da direita?
+            Você é um político da esquerda?
           </h2>
           <p className="text-lg mb-6 opacity-90">
             Cadastre-se em nossa plataforma e conecte-se com seus eleitores através de tecnologia de ponta
           </p>
           <Link
             to="/cadastro-politico"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-green-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-progressive-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
           >
             <Users className="w-5 h-5" />
             Cadastrar-se como Político

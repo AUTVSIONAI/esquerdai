@@ -38,6 +38,8 @@ const UserDashboard = () => {
           <Routes>
             <Route path="/" element={<Overview />} />
             <Route path="/profile" element={<Profile />} />
+            {/* Alias novo para EsquerdaGPT mantendo compatibilidade */}
+            <Route path="/esquerdagpt" element={<UnifiedAI />} />
             <Route path="/direitagpt" element={<UnifiedAI />} />
             <Route path="/creative" element={<UnifiedAI />} />
             <Route path="/agents" element={<Agents />} />

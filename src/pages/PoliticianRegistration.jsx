@@ -34,8 +34,8 @@ const PoliticianRegistration = () => {
 
   const commonParties = [
     'PL', 'PP', 'REPUBLICANOS', 'UNIÃO', 'PSD', 'MDB', 'PSDB',
-    'PODEMOS', 'PDT', 'PSB', 'SOLIDARIEDADE', 'NOVO', 'PATRIOTA',
-    'PROS', 'AVANTE', 'PMN', 'CIDADANIA', 'PV', 'REDE', 'PSL'
+    'PODEMOS', 'PDT', 'PSB', 'SOLIDARIEDADE', 'NOVO', 'PSOL',
+    'PT', 'PROS', 'AVANTE', 'PMN', 'CIDADANIA', 'PV', 'REDE', 'PSL'
   ];
 
   const positions = [
@@ -139,7 +139,7 @@ const PoliticianRegistration = () => {
         <div className="mb-8">
           <Link
             to="/politicos"
-            className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 mb-4"
+            className="inline-flex items-center gap-2 text-progressive-600 hover:text-progressive-700 mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
             Voltar para Políticos
@@ -166,7 +166,7 @@ const PoliticianRegistration = () => {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                   placeholder="Seu nome completo"
                 />
               </div>
@@ -180,7 +180,7 @@ const PoliticianRegistration = () => {
                   name="birth_date"
                   value={formData.birth_date}
                   onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                 />
               </div>
 
@@ -194,7 +194,7 @@ const PoliticianRegistration = () => {
                   value={formData.party}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                 >
                   <option value="">Selecione seu partido</option>
                   {commonParties.map(party => (
@@ -213,7 +213,7 @@ const PoliticianRegistration = () => {
                   value={formData.state}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                 >
                   <option value="">Selecione seu estado</option>
                   {brazilianStates.map(state => (
@@ -232,7 +232,7 @@ const PoliticianRegistration = () => {
                   value={formData.position}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                 >
                   <option value="">Selecione seu cargo</option>
                   {positions.map(position => (
@@ -295,7 +295,7 @@ const PoliticianRegistration = () => {
                     name="photo_url"
                     value={formData.photo_url}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                     placeholder="https://exemplo.com/sua-foto.jpg"
                   />
                   <p className="text-sm text-gray-500 mt-1">
@@ -316,7 +316,7 @@ const PoliticianRegistration = () => {
                 value={formData.bio}
                 onChange={handleInputChange}
                 rows={4}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                 placeholder="Conte um pouco sobre sua trajetória política..."
               />
             </div>
@@ -335,7 +335,7 @@ const PoliticianRegistration = () => {
                     name="social_twitter"
                     value={formData.social_links.twitter}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                     placeholder="https://twitter.com/seuusuario"
                   />
                 </div>
@@ -350,7 +350,7 @@ const PoliticianRegistration = () => {
                     name="social_instagram"
                     value={formData.social_links.instagram}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                     placeholder="https://instagram.com/seuusuario"
                   />
                 </div>
@@ -365,7 +365,7 @@ const PoliticianRegistration = () => {
                     name="social_facebook"
                     value={formData.social_links.facebook}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                     placeholder="https://facebook.com/seuusuario"
                   />
                 </div>
@@ -380,7 +380,7 @@ const PoliticianRegistration = () => {
                     name="social_website"
                     value={formData.social_links.website}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-progressive-500 focus:border-transparent"
                     placeholder="https://seusite.com"
                   />
                 </div>
@@ -399,7 +399,7 @@ const PoliticianRegistration = () => {
               <button
                 type="submit"
                 disabled={loading || uploadingPhoto}
-                className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="flex-1 px-6 py-3 bg-progressive-600 text-white rounded-lg hover:bg-progressive-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {uploadingPhoto && <Upload className="w-4 h-4 animate-spin" />}
                 {uploadingPhoto ? 'Enviando foto...' : (loading ? 'Cadastrando...' : 'Cadastrar')}

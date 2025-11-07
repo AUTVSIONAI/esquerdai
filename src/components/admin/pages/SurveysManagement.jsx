@@ -544,7 +544,7 @@ const CreateSurveyModal = ({ survey, onClose, onSuccess }) => {
                 >
                   <option value="todos">Todos os usuários</option>
                   <option value="premium">Usuários premium</option>
-                  <option value="patriotas">Membros patriotas</option>
+                  <option value="progressistas">Membros progressistas</option>
                 </select>
               </div>
             </div>

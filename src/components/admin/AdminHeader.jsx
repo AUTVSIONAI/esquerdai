@@ -1,15 +1,23 @@
 import React, { useState } from 'react'
 import { Menu, Bell, Search, LogOut, Settings, User, Shield } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
-import { supabase } from '../../lib/supabase'
+// remove: import { supabase } from '../../lib/supabase'
+import { useNavigate } from 'react-router-dom'
 
 const AdminHeader = ({ setSidebarOpen }) => {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
+  const navigate = useNavigate()
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
+    try {
+      navigate('/logout')
+    } catch (err) {
+      console.error('Erro no logout admin:', err)
+      try { navigate('/login', { replace: true }) } catch {}
+      window.location.replace('/login')
+    }
   }
 
   const notifications = [

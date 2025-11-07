@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Plus, Edit, Trash2, Search, Eye, BookOpen, Calendar, Upload } from 'lucide-react'
 import { apiClient } from '../../../lib/api.ts'
+import { useAuth } from '../../../hooks/useAuth'
 
 const BlogManagement = () => {
+  const { userProfile } = useAuth()
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -13,16 +15,21 @@ const BlogManagement = () => {
   const [imagePreview, setImagePreview] = useState(null)
   const [uploadingImage, setUploadingImage] = useState(false)
 
+  // Estado para seleção de político autor (agora apenas tag opcional)
+  const [politicians, setPoliticians] = useState([])
+  const [loadingPoliticians, setLoadingPoliticians] = useState(false)
   const [formData, setFormData] = useState({
     title: '',
     content: '',
     cover_image_url: '',
     is_published: false,
-    tags: ''
+    tags: '',
+    politician_id: ''
   })
 
   useEffect(() => {
     fetchPosts()
+    fetchPoliticians()
   }, [])
 
   const fetchPosts = async () => {
@@ -35,6 +42,19 @@ const BlogManagement = () => {
       setPosts([])
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchPoliticians = async () => {
+    try {
+      setLoadingPoliticians(true)
+      const response = await apiClient.get('/politicians?limit=100')
+      setPoliticians(response.data?.data || [])
+    } catch (error) {
+      console.error('Erro ao carregar políticos:', error)
+      setPoliticians([])
+    } finally {
+      setLoadingPoliticians(false)
     }
   }
 
@@ -65,7 +85,7 @@ const BlogManagement = () => {
           'Content-Type': 'multipart/form-data'
         }
       })
-      return response.data.url
+      return response.data?.data?.url
     } catch (error) {
       console.error('Erro ao fazer upload da imagem:', error)
       throw new Error('Falha no upload da imagem')
@@ -74,22 +94,92 @@ const BlogManagement = () => {
     }
   }
 
+  const resolveAuthorId = async () => {
+    try {
+      const res = await apiClient.get('/users/profile')
+      const id = res?.data?.id || res?.data?.userId || res?.data?.data?.id
+      return id || userProfile?.id || null
+    } catch (error) {
+      console.warn('⚠️ Falha ao obter author_id do backend, usando supabase id:', error?.message || error)
+      return userProfile?.id || null
+    }
+  }
+
+  const makeSlug = (title) => {
+    return (title || '')
+      .toLowerCase()
+      .replace(/[\W_]+/g, ' ')
+      .trim()
+      .replace(/\s+/g, '-')
+      .slice(0, 120)
+  }
+
+  const makeExcerpt = (content) => {
+    const text = (content || '').replace(/<[^>]+>/g, '').trim()
+    return text.length > 200 ? text.slice(0, 200) + '…' : text
+  }
+
+  // Reseta formulário e fecha o modal
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      content: '',
+      cover_image_url: '',
+      is_published: false,
+      tags: '',
+      politician_id: ''
+    })
+    setEditingPost(null)
+    setShowAddModal(false)
+    setImageFile(null)
+    setImagePreview(null)
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
       let imageUrl = formData.cover_image_url
-      
+
       // Upload da imagem se houver uma nova
       if (imageFile) {
         imageUrl = await uploadBlogImage()
       }
-      
-      const postData = {
-        ...formData,
-        cover_image_url: imageUrl,
-        tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
+
+      // Validações básicas
+      if (!userProfile?.id) {
+        alert('Faça login como jornalista/admin para publicar.')
+        return
       }
-      
+      if (!formData.title?.trim()) {
+        alert('Título é obrigatório.')
+        return
+      }
+      if (!formData.content?.trim()) {
+        alert('Conteúdo é obrigatório.')
+        return
+      }
+
+      // politician_id agora é opcional; publicação geral de blog não exige associação
+
+      const authorId = await resolveAuthorId()
+      if (!authorId) {
+        alert('Não foi possível resolver o autor. Refaça o login e tente novamente.')
+        return
+      }
+
+      const postData = {
+        title: formData.title.trim(),
+        content: formData.content,
+        cover_image_url: imageUrl || '',
+        is_published: !!formData.is_published,
+        tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
+        author_id: authorId,
+        slug: makeSlug(formData.title),
+        excerpt: makeExcerpt(formData.content)
+      }
+
+      console.debug('🟨 Enviando postData:', postData)
+
       if (editingPost) {
         await apiClient.put(`/blog/${editingPost.id}`, postData)
       } else {
@@ -99,43 +189,17 @@ const BlogManagement = () => {
       resetForm()
     } catch (error) {
       console.error('Erro ao salvar post:', error)
-      alert('Erro ao salvar post. Tente novamente.')
-    }
-  }
-
-  const handleDelete = async (id) => {
-    if (window.confirm('Tem certeza que deseja excluir este post?')) {
+      const errData = error?.response?.data
       try {
-        await apiClient.delete(`/blog/${id}`)
-        fetchPosts()
-      } catch (error) {
-        console.error('Erro ao excluir post:', error)
-      }
+        console.error('🟥 Resposta de erro da API:', JSON.stringify(errData))
+      } catch {}
+      const errMsg =
+        (errData?.message || errData?.error || errData?.detail) ??
+        (typeof errData === 'object' ? JSON.stringify(errData) : String(errData)) ??
+        error?.message ??
+        'Erro ao salvar post. Tente novamente.'
+      alert(`Erro ao salvar post: ${errMsg}`)
     }
-  }
-
-  const toggleStatus = async (id, currentStatus) => {
-    try {
-      const newStatus = !currentStatus
-      await apiClient.put(`/blog/${id}`, { is_published: newStatus })
-      fetchPosts()
-    } catch (error) {
-      console.error('Erro ao alterar status do post:', error)
-    }
-  }
-
-  const resetForm = () => {
-    setFormData({
-      title: '',
-      content: '',
-      cover_image_url: '',
-      is_published: false,
-      tags: ''
-    })
-    setEditingPost(null)
-    setShowAddModal(false)
-    setImageFile(null)
-    setImagePreview(null)
   }
 
   const startEdit = (post) => {
@@ -143,8 +207,9 @@ const BlogManagement = () => {
       title: post.title || '',
       content: post.content || '',
       cover_image_url: post.cover_image_url || '',
-      is_published: post.is_published || false,
-      tags: Array.isArray(post.tags) ? post.tags.join(', ') : ''
+      is_published: !!post.is_published,
+      tags: Array.isArray(post.tags) ? post.tags.join(', ') : '',
+      politician_id: ''
     })
     setEditingPost(post)
     setShowAddModal(true)
@@ -426,7 +491,7 @@ const BlogManagement = () => {
                       type="text"
                       value={formData.tags}
                       onChange={(e) => setFormData({...formData, tags: e.target.value})}
-                      placeholder="política, conservadorismo, brasil"
+                      placeholder="política, progressismo, brasil"
                       className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>

@@ -46,6 +46,8 @@ const Store = () => {
 
   // Função para mapear produtos da API para o formato esperado pelo componente
   const mapApiProductToComponent = (apiProduct) => {
+    const stock = (apiProduct?.stock_quantity ?? apiProduct?.stock ?? 0)
+    const isActive = apiProduct?.active !== false // endpoint já filtra active=true; defensivo
     return {
       id: apiProduct.id,
       name: apiProduct.name,
@@ -53,12 +55,12 @@ const Store = () => {
       price: apiProduct.price,
       originalPrice: null,
       category: apiProduct.category,
-      image: apiProduct.image || apiProduct.images?.[0] || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=300&h=300&fit=crop&crop=center',
+      image: apiProduct.image || apiProduct.image_url || (Array.isArray(apiProduct.images) ? apiProduct.images[0] : undefined) || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=300&h=300&fit=crop&crop=center',
       rating: apiProduct.rating || 0,
       reviews: apiProduct.reviews || 0,
-      inStock: (apiProduct.stock_quantity || 0) > 0 && apiProduct.status === 'active',
+      inStock: stock > 0 && isActive,
       badge: apiProduct.featured ? 'Destaque' : null,
-      stock: apiProduct.stock_quantity || 0
+      stock
     }
   }
 
@@ -106,22 +108,17 @@ const Store = () => {
 
   const handleCheckout = async () => {
     try {
-      const checkoutData = {
-        items: cart.map(item => ({
-          id: item.id,
-          quantity: item.quantity,
-          price: item.price
-        })),
-        total: getTotalPrice()
-      }
-      
-      const response = await StoreService.createCheckoutSession(checkoutData)
-      if (response.checkout_url) {
-        window.location.href = response.checkout_url
+      // O backend usa o carrinho do usuário; aqui apenas iniciamos a sessão
+      const result = await StoreService.createProductCheckout()
+      const checkoutUrl = result?.url || result?.checkout_url || result?.data?.url
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl
+      } else {
+        throw new Error('URL de checkout não disponível')
       }
     } catch (error) {
       console.error('Erro no checkout:', error)
-      alert('Erro ao processar checkout. Tente novamente.')
+      alert('Erro ao processar checkout. Faça login e tente novamente.')
     }
   }
 
@@ -141,8 +138,8 @@ const Store = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Loja Patriota</h2>
-          <p className="text-gray-600">Produtos exclusivos para conservadores</p>
+          <h2 className="text-2xl font-bold text-gray-900">Loja Progressista</h2>
+          <p className="text-gray-600">Produtos para engajamento progressista</p>
         </div>
         <button
           onClick={() => setShowCart(!showCart)}

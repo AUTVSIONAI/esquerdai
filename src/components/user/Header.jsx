@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 import { useGamification } from '../../hooks/useGamification'
-import { signOut } from '../../lib/supabase'
+// remove: import { signOut } from '../../lib/supabase'
 import { Menu, Bell, LogOut, Settings, User } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const Header = ({ setSidebarOpen }) => {
-  const { user, userProfile } = useAuth()
+  const { user, userProfile, logout } = useAuth()
   const { userPoints } = useGamification()
+  const navigate = useNavigate()
   
   // Debug temporário para verificar userPoints
   console.log('🎯 Header - userPoints:', userPoints)
@@ -16,12 +18,10 @@ const Header = ({ setSidebarOpen }) => {
 
   const handleSignOut = async () => {
     try {
-      await signOut()
-      // Forçar reload completo da página para limpar todos os estados
-      window.location.replace('/login')
+      navigate('/logout')
     } catch (error) {
       console.error('Erro no logout:', error)
-      // Mesmo com erro, redirecionar para login
+      try { navigate('/login', { replace: true }) } catch {}
       window.location.replace('/login')
     }
   }

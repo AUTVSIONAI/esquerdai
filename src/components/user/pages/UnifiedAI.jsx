@@ -43,9 +43,9 @@ const UnifiedAI = () => {
       id: 'post',
       name: 'Post Social',
       icon: MessageSquare,
-      description: 'Posts para redes sociais com viés conservador',
+      description: 'Posts para redes sociais com viés progressista',
       color: 'blue',
-      placeholder: 'Ex: Post sobre importância da família brasileira'
+      placeholder: 'Ex: Post sobre justiça social, direitos humanos e igualdade'
     },
     {
       id: 'article',
@@ -53,7 +53,7 @@ const UnifiedAI = () => {
       icon: Image,
       description: 'Artigos informativos e opinativos',
       color: 'green',
-      placeholder: 'Ex: Artigo sobre livre mercado no Brasil'
+      placeholder: 'Ex: Artigo sobre políticas públicas para redução das desigualdades'
     },
     {
       id: 'video',
@@ -61,7 +61,7 @@ const UnifiedAI = () => {
       icon: Video,
       description: 'Roteiros para vídeos educativos',
       color: 'purple',
-      placeholder: 'Ex: Roteiro sobre empreendedorismo'
+      placeholder: 'Ex: Roteiro sobre organização comunitária ou movimento estudantil'
     },
     {
       id: 'speech',
@@ -69,7 +69,7 @@ const UnifiedAI = () => {
       icon: Quote,
       description: 'Discursos inspiradores e motivacionais',
       color: 'red',
-      placeholder: 'Ex: Discurso sobre patriotismo'
+      placeholder: 'Ex: Discurso sobre solidariedade e defesa da democracia'
     }
   ]
 
@@ -147,7 +147,7 @@ const UnifiedAI = () => {
           type: msg.role === 'user' ? 'user' : 'bot',
           content: msg.content,
           timestamp: new Date(msg.created_at),
-          model: msg.model || 'Patriota IA'
+          model: msg.model || 'EsquerdaIA'
         }))
         setMessages(formattedMessages)
       }
@@ -199,12 +199,12 @@ const UnifiedAI = () => {
         type: 'bot',
         content: data.response,
         timestamp: new Date(),
-        model: data.model || 'Patriota IA'
+        model: data.model || 'EsquerdaIA'
       }
       
       setMessages(prev => [...prev, botMessage])
       conversationId.current = data.conversation_id
-      setCurrentModel('Patriota IA')
+      setCurrentModel('EsquerdaIA')
       setIsConnected(true)
       setLastBotMessage(data.response)
       
@@ -236,7 +236,9 @@ const UnifiedAI = () => {
     setIsGenerating(true)
     
     try {
+      const typeMap = { post: 'social_post', article: 'text', video: 'video_script', speech: 'speech' }
       const response = await apiClient.post('/ai/generate', {
+        type: typeMap[selectedTemplate] || 'text',
         prompt,
         template: selectedTemplate,
         tone: selectedTone,
