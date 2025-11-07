@@ -3,7 +3,10 @@ import { ApiClient, ApiResponse, RequestOptions, ApiMetrics, HealthCheck } from 
 import { supabase } from './supabase';
 
 // Configuração base da API
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+const runtimeFallback = (typeof window !== 'undefined' && /esquerdai\.com$/.test(window.location.hostname))
+  ? 'https://esquerdai-backend.vercel.app/api'
+  : 'http://localhost:4000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || runtimeFallback;
 
 // Log da URL da API para debug
 console.log('🔗 API Base URL:', API_BASE_URL);
